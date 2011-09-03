@@ -4,29 +4,27 @@
 
 ###pl.ajax(params)
 
-*
+Creates an Ajax-request.
 
-*
+* `url`
 
-*
+* `type`
 
-*
+*  `dataType`
 
-*
+* `async`
 
-*
+* `charset`
 
-*
+* `data`
 
-*
+* `load`
 
-*
+* `success`
 
-*
+* `error`
 
-*
-
-__Example of use:__
+__Example of usage:__
 
   ```javascript
   pl.ajax({
