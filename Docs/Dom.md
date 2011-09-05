@@ -279,3 +279,47 @@ Makes all selected elements visible.
 ###pl().hide()
 
 Makes all selected elements invisible.
+
+---
+
+###pl().after(Element)
+
+Inserts `Element` after all selected elements. `Element` can be a string or a new element.
+
+  ```javascript
+  pl('div').after('<p>Ave.</p>');                  // Insert a string after all the DIVs
+  pl('div').after( pl('<p>').html('Ave.').get() ); // The same result as in upper example
+  ```
+  
+---
+
+###pl().before(Element)
+
+Inserts `Element` before all selected elements. `Element` can be a string or a new element.
+
+  ```javascript
+  pl('div').before('<p>Ave bonum.</p>');                  // Insert a string before all the DIVs
+  pl('div').before( pl('<p>').html('Ave bonum.').get() ); // The same result as in upper example
+  ```
+  
+---
+
+###pl().append(Element)
+
+Appends `Element` to end of each of selected elements.
+
+  ```javascript
+  pl('div').append('<p>Something after all the content.</p>');
+  pl('div').append( pl('<p>').html('Something after all the content.').get() ); // The same result
+  ```
+
+---
+
+###pl().prepend(Element)
+
+Appends `Elements` to the beginning of each of selected elements.
+
+  ```javascript
+  pl('div').prepend('<p>Something before all the content.</p>');
+  pl('div').prepend( pl('<p>').html('Something before all the content.').get() ); // The same result
+  ```
