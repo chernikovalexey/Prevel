@@ -1,17 +1,38 @@
-// Prevel Framework
-// Version 1.0.0 Final
+/* Prevel Framework v1.0.0
+ * http://github.com/chernikovalexey/Prevel
+ * 
+ * Copyright 2011, Alexey Chernikov
+ * Dual licensed under the:
+ *  - GNU LGPL (http://opensource.org/licenses/lgpl-license.php)
+ *  - MIT License (http://opensource.org/licenses/mit-license.php)
+ * 
+ * =====
+ * 
+ * Contains YASS v0.3.9
+ * http://yass.webo.in
+ * 
+ * Copyright 2008-2009, Nikolay Matsievsky (sunnybear)
+ * Dual licensed under the:
+ *  - MIT License (http://opensource.org/licenses/mit-license.php)
+ *  - GNU GPL (http://opensource.org/licenses/gpl-license.php)
+**/
 
 (function(win, doc, uf) {
+
+  // Short aliases for often-used methods and values
   var proto     = 'prototype',
       ael       = 'addEventListener',
       ge        = 'getElement',
       cn        = 'className',
       nn        = 'null',
       u         = 'undef',
+      
+      // Is <tagName>?
       newRegExp = '<([A-z]+)>',
       n         = null,
       ef        = function(){};
   
+  // Short names for almost all the types
   var types = {
     'function':  'fn',
     'object':    'obj',
@@ -21,12 +42,14 @@
     'undefined': u
   };
   
+  // Fix attribute names because of .setAttribute
   var fixAttr = {
     'className': 'class',
     'cssFloat':  'float',
     'htmlFor':   'for'
   };
   
+  // Cached check if accessors are availiable
   var accessors = 
     !!Object[proto].__lookupGetter__ && 
     !!Object[proto].__lookupSetter__;
@@ -34,8 +57,10 @@
   var classSupport = !!doc[ge + 'sByClassName'],
       qsSupport    = !!doc.querySelectorAll;
 
+  // User agent
   var ua = win.navigator.userAgent.toLowerCase();
   
+  // Local copy of `pl`
   var pl = (function() {
     return function(o, context, index) {
       return new pl.fn.init(o, context, index);
@@ -49,6 +74,7 @@
       Child  = pl;
     }
     
+    // If accessors are supported, they will be considered in extending
     if(accessors) {
       var getter, setter;
       for(var key in Parent) {
@@ -73,12 +99,14 @@
     return Child;
   };
   
+  // Extend the Object.prototype
   pl.implement = function(Child, Parent) {
     return pl.extend(Child[proto], Parent);
   };
 
   // Core, extended  
   pl.extend({
+    // Uses native method, if it's availiable
     isArray: Array.isArray || function(o) {
       return Object[proto].toString.call(o) === '[object Array]';
     },
@@ -101,6 +129,7 @@
     },
         
     empty: function(o) {
+      // Separate check for object
       if(pl.type(o, 'obj')) {
         for(var key in o) return false; 
         return true;
@@ -109,6 +138,8 @@
     },
     
     trim: function(text) {
+      
+      // Uses native method, if it's availiable
       return String[proto].trim ? 
         text.trim() : 
         text.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
@@ -117,6 +148,7 @@
     each: function(arr, func) {
       var key = arr.length;
       while(--key > -1) {
+        // `this` ought to contains the current value
         func.call(arr[key], key, arr[key]);
       }
     },
@@ -133,6 +165,7 @@
   });
   
   // DOM
+  // Add `fn` to `pl`, at first
   pl.extend({fn: {}});
   pl.extend(pl.fn, {
     init: (function() {
@@ -145,7 +178,7 @@
               _int = [create(ne[1], params)];
             } else {
               switch(pl.type(params)) {
-                case 'str': // Get 'o' from the context
+                case 'str': // Get `o` from the context
                   switch(pl.type(index)) {
                     case 'int':
                       _int = [pl.find(o, params)[index]];
@@ -160,7 +193,7 @@
                   _int = [pl.find(o)[params]];
                   break;
                 default:
-                case u: // Just find all the 'o'
+                case u: // Just find all the `o`
                   _int = pl.find(o);
                   break;
               }
@@ -192,10 +225,12 @@
     },
     
     html: function(ins, to) {
+      // Delegate to the common method
       return inner(this, 'innerHTML', ins, to);
     },
     
     text: function(ins, to) {
+      // The same as in pl().html()
       return inner(this, innerText, ins, to);
     },
     
@@ -204,6 +239,7 @@
       return e.length === 1 ? e[0] : (!pl.type(index, u) ? e[index] : e);
     },
     
+    // Recursion's faster than loop
     parent: function(step) {
       if(!step) var step = 1;
       var rParent = function(elem, step) {
@@ -224,6 +260,7 @@
     
     addClass: function(c) {
       pl.each(this.elements, function() {
+        // If this class already exists
         if(pl.inArray(c, this[cn].split(' ')) !== -1) return;
         this[cn] += (this[cn] ? ' ' : '') + c;
       });
@@ -239,6 +276,7 @@
         var cl = this[cn].split(' ');
         var from = pl.inArray(c, cl);
         
+        // If this class does not exist
         if(from === -1) return;
         
         cl.splice(from, 1);
@@ -289,7 +327,7 @@
         
         if(pl.type(set, 'int') && !curCSS.rmvPostFix[style]) {
           set += 'px';
-        } else if(style === 'opacity') {
+        } else if(style === 'opacity') { // Cross-browser opacity
           var fixed = curCSS.fixOpacity(set),
               style = fixed[0],
               set   = fixed[1];
@@ -321,10 +359,12 @@
     },
     
     bind: function(evt, fn) {
+      // Delegate to the common method
       return Events.routeEvent(evt, fn, 1);
     },
     
     unbind: function(evt, fn) {
+      // The same as in pl().bind()
       return Events.routeEvent(evt, fn, 0);
     },
     
@@ -343,11 +383,15 @@
         
         if(display === 'none') return;
         
+        // 'Real-display' vault
         this.setAttribute('plrd', display);
         this.style.display = 'none';
       });
       return this;
     },
+    
+    // (!) Below there are a few repetitions of code which 
+    //     help improving the perfomance
     
     after: function(o) {
       if(pl.type(o, 'obj')) {
@@ -434,8 +478,9 @@
     }
   });
 
-  // Root-methods
+  // Root-methods (such as pl.rootMethod())
   pl.extend({
+    // Convert object to a 'param-string'
     toParams: function(o) {
       if(!pl.type(o, 'obj')) return o;
       
@@ -449,6 +494,7 @@
     },
     
     JSON: function(data) {
+      // Checks if JSON is valid
       return (!(/[^,:{}[]0-9.-+Eaeflnr-u nrt]/.test(
         data.replace(/"(.|[^"])*"/g, ''))) && eval('(' + data + ')')
       );
@@ -465,6 +511,8 @@
         ie8: !isOpera && /msie 8/i.test(ua),
         firefox: /firefox/i.test(ua),
         chrome: isChrome,
+        
+        // Old Safari version
         safari_khtml: !isChrome && /khtml/i.test(ua),
         safari: !isChrome && /webkit|safari/i.test(ua)
       };
@@ -483,13 +531,13 @@
           success = params.success || ef;
             
       var requestPrepare = function() {
-        if(win.XMLHttpRequest) { // Modern
+        if(win.XMLHttpRequest) { // Modern browsers
           Request = new XMLHttpRequest();
           
           if(Request.overrideMimeType) {
             Request.overrideMimeType('text/html');
           }
-        } else if(win.ActiveXObject) { // Deprecated IE
+        } else if(win.ActiveXObject) { // Obsolete IE
           try {
             Request = new ActiveXObject('Msxml2.XMLHTTP');
           } catch(e) {
@@ -503,7 +551,7 @@
           return alert('Could not create an XMLHttpRequest instance.');
         }
         
-        // IE 8 fix with attachEvent
+        // Fix related with `attachEvent`
         Request.onreadystatechange = function(e) {
           switch(Request.readyState) {
             case 1: load();
@@ -523,6 +571,7 @@
         };
       };
       
+      // Common headers
       var headers = function(type) {
         Request.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
         
@@ -556,9 +605,8 @@
     }
   });
 
-  // Core (without already existing internal methods) of YASS v0.3.8
-  // Copyright (c) 2008-2009 Nikolay Matsievsky aka sunnybear (webo.in)
-  // http://yass.webo.in
+  // CSS query selector (YASS)
+  // Integrated into Prevel Framework
   pl.extend({
     find: (function(_) {
       pl.extend(_, {        
@@ -1048,12 +1096,12 @@
     })({})
   });
   
-  // =====================
-  // For internal use only
+  // Private methods
   var innerText = pl.browser('ie') ? 'innerText' : 'textContent';
   var Events = {
+    // DOMContentLoaded
     ready: (function() {
-      this.readyList = [];
+      this.readyList = []; // Functions to be called
       this.bindReady = function(handler) {
         var called = false;
     
@@ -1105,10 +1153,12 @@
       };
     })(),
     
+    // Cross-browser event adding and removing
+    // http://javascript.ru/tutorial/events/crossbrowser
     attaches: (function() {
       var turns = 0;
       
-      function fixEvt(event) { // Todo: remove to the root-methods
+      function fixEvt(event) {
         event = event || win.event;
         
         if(event.fixed) {
@@ -1264,18 +1314,21 @@
     }
   };
   
+  // Create new element
   var create = function(o, params) {
     var ns = doc.createElement(o);
     return params ? pl.extend(ns, params) : ns;
   };
   
   var curCSS = {
+    // E.g. 'font-siz' to 'fontSize'
     fixStyle: function(str) {
       if(!str.match('-')) return str;
       var parts = str.split('-');
       return parts[0] + parts[1].toUpperCase();  
     },
     
+    // Cross-browser opacity
     fixOpacity: function(val) {
       var op    = 'opacity', 
           fixed = [op, val];
@@ -1314,6 +1367,7 @@
       lineHeight: true
     },
     
+    // Get computed style
     get: function(o, style) {
       if(style === 'opacity') {
         var fixed = curCSS.fixOpacity(0),
@@ -1326,7 +1380,7 @@
     }
   };
 
-  // Final
+  // Add `pl` to the global scope
   pl.implement(pl.fn.init, pl.fn);
   win.pl = win.prevel = pl;
 })(this, document);
