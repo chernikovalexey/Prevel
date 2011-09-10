@@ -17,12 +17,14 @@
   };
   
   // Add `fn` to `pl`, at first (to reduce nested level)
-  pl.extend({fn: {}});
-  pl.extend(pl.fn, {
+  pl.extend({
+    fn: {}, 
     find: function(selector, root) { // Basic
       return doc.querySelectorAll(root ? root + ' ' + selector : selector);
-    },
+    }
+  });
   
+  pl.extend(pl.fn, {
     init: (function() {
       return function(o, params, index) {
         var _int;
