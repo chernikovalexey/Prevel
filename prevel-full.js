@@ -322,7 +322,7 @@
   // Add `fn` to `pl`, at first (to reduce nested level)
   pl.extend({
     fn: {}, 
-    find: function(selector, root) { // Basic
+    find: function(selector, root) { // Basic   
       return doc.querySelectorAll(root ? root + ' ' + selector : selector);
     }
   });
@@ -944,8 +944,7 @@
   var classSupport = !!doc[ge + 'sByClassName'],
       qsSupport    = !!doc.querySelectorAll;
 
-  pl.extend({
-    find: (function(_) {
+  pl.find = (function(_) {
       pl.extend(_, {        
         attr: {
           '': function(child, attr) {
@@ -1430,8 +1429,7 @@
 
         return sets;
       };
-    })({})
-  });
+    })({});
 })();
 })(this, document, 'prototype', 'addEventListener', 
    'getElement', 'className', 'null', 'undef', 
