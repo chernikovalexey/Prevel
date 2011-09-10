@@ -16,7 +16,7 @@
  *  - MIT License (http://opensource.org/licenses/mit-license.php)
  *  - GNU GPL (http://opensource.org/licenses/gpl-license.php)
 **/
-
+ 
 (function(win, doc, proto, ael, ge, cn, nn, u, newRegExp, n, ef, uf) {
 /* Module: Core.js
  * Requirements: -
@@ -36,7 +36,7 @@
  *  - GNU LGPL (http://opensource.org/licenses/lgpl-license.php)
  *  - MIT License (http://opensource.org/licenses/mit-license.php)
 **/
-
+ 
 (function() {
   
   // Short names for almost all the types
@@ -53,7 +53,7 @@
   var accessors = 
     !!Object[proto].__lookupGetter__ && 
     !!Object[proto].__lookupSetter__;
-
+ 
   // Local copy of `pl`
   var pl = (function() {
     return function(o, context, index) {
@@ -94,7 +94,7 @@
     
     return Child;
   };
-
+ 
   pl.extend({
     // Extend the Object.prototype
     implement: function(Child, Parent) {
@@ -194,7 +194,7 @@
         safari_khtml: !isChrome && /khtml/i.test(ua),
         safari: !isChrome && /webkit|safari/i.test(ua)
       };
-
+ 
       for(var key in browser) {
         if(browser[key]) {
           return name === key || key;
@@ -202,7 +202,7 @@
       }
     }
   });
-
+ 
   // Add `pl` to the global scope
   pl.extend(win, {pl: pl, prevel: pl});
 })();
@@ -214,7 +214,7 @@
  *  - GNU LGPL (http://opensource.org/licenses/lgpl-license.php)
  *  - MIT License (http://opensource.org/licenses/mit-license.php)
 **/
-
+ 
 (function() {
   pl.extend({
     ajax: function(params) {
@@ -299,7 +299,7 @@
     }
   });
 })();
-
+ 
 /* Module: Dom.js
  * Requirements: Core.js
  * Provides: Different interactions with the DOM.
@@ -308,7 +308,7 @@
  *  - GNU LGPL (http://opensource.org/licenses/lgpl-license.php)
  *  - MIT License (http://opensource.org/licenses/mit-license.php)
 **/
-
+ 
 (function() {
   
   //Fix attribute names because of .setAttribute
@@ -319,12 +319,14 @@
   };
   
   // Add `fn` to `pl`, at first (to reduce nested level)
-  pl.extend({fn: {}});
-  pl.extend(pl.fn, {
+  pl.extend({
+    fn: {}, 
     find: function(selector, root) { // Basic
       return doc.querySelectorAll(root ? root + ' ' + selector : selector);
-    },
+    }
+  });
   
+  pl.extend(pl.fn, {
     init: (function() {
       return function(o, params, index) {
         var _int;
@@ -363,7 +365,7 @@
             _int = [o];
             break;
         }
-
+ 
         this.elements = _int;
         this.selector = arguments;
         __this = this;
@@ -431,7 +433,7 @@
         if(from === -1) return;
         
         cl.splice(from, 1);
-
+ 
         if(pl.empty(cl)) {
           this.removeAttribute('class');
         } else {
@@ -443,7 +445,7 @@
     
     attr: function(attr, set) {
       attr = fixAttr[attr] || attr;
-
+ 
       if(set) {
         pl.each(this.elements, function() {
           this.setAttribute(attr, set);
@@ -465,13 +467,13 @@
     
     removeAttr: function(attr) {
       attr = fixAttr[attr] || attr;
-
+ 
       pl.each(this.elements, function() {
         this.removeAttribute(attr);
       });
       return this;
     },
-
+ 
     css: function(style, set) {
       if(set) {
         style = curCSS.fixStyle(style);
@@ -501,7 +503,7 @@
       }
       return this;
     },
-
+ 
     each: function(fn) {
       pl.each(__this.elements, function() {
         fn.call(this);
@@ -524,7 +526,7 @@
         if(pl(this).css('display') !== 'none') return;           
         pl(this).css('display', this.getAttribute('plrd') || '');
       });
-
+ 
       return this;
     },
     
@@ -630,7 +632,7 @@
   });
   
   pl.implement(pl.fn.init, pl.fn);
-
+ 
   //Private methods
   var innerText = pl.browser('ie') ? 'innerText' : 'textContent';
   var Events = {
@@ -821,11 +823,11 @@
       return __this;
     }
   };
-
+ 
   var inner = function(e, method, ins, to) {
     var init = e;
     var e = init.elements[0];
-
+ 
     if(!ins) {
       return e[method];
     } else {
@@ -867,7 +869,7 @@
     fixOpacity: function(val) {
       var op    = 'opacity', 
           fixed = [op, val];
-
+ 
       switch(pl.browser()) {
         case 'ie7':
           fixed[0] = 'filter';
@@ -922,513 +924,6 @@
     }
     return elem;
   };
-})();
-
-/* Module: Find.js
- * Requirements: Core.js
- * Provides: CSS3 queries.
- * 
- * Contains YASS v0.3.9
- * http://yass.webo.in
- * 
- * Copyright 2008-2009, Nikolay Matsievsky (sunnybear)
- * Dual licensed under the:
- *  - MIT License (http://opensource.org/licenses/mit-license.php)
- *  - GNU GPL (http://opensource.org/licenses/gpl-license.php)
-**/
-
-(function() {
-  var classSupport = !!doc[ge + 'sByClassName'],
-      qsSupport    = !!doc.querySelectorAll;
-
-  pl.extend({
-    find: (function(_) {
-      pl.extend(_, {        
-        attr: {
-          '': function(child, attr) {
-            return !!child.getAttribute(attr);
-          },
-          '=': function(child, attr, value) {
-            return (attr = child.getAttribute(attr)) && attr === value;
-          },
-          '&=': function(child, attr, value) {
-            return 
-              (attr = child.getAttribute(attr)) && 
-              (new RegExp('(^| +)' + value + '($| +)').test(attr));
-          },
-          '^=': function(child, attr, value) {
-            return 
-              (attr = child.getAttribute(attr) + '') && !attr.indexOf(value);
-          },
-          '$=': function(child, attr, value) {
-            return 
-              (attr = child.getAttribute(attr) + '') && 
-              attr.indexOf(value) === attr.length - value.length;
-          },
-          '*=': function(child, attr, value) {
-            return 
-              (attr = child.getAttribute(attr) + '') && 
-              attr.indexOf(value) != -1;
-          },
-          '|=': function(child, attr, value) {
-            return 
-              (attr = child.getAttribute(attr) + '') && 
-              (attr === value || !!attr.indexOf(value + '-'));
-          },
-          '!=': function(child, attr, value) {
-            return 
-              !(attr = child.getAttribute(attr)) || 
-              !(new RegExp('(^| +)' + value + '($| +)').test(attr));
-          }
-        },
-        
-        mods: {
-          'first-child': function(child) {
-            return child.parentNode[ge + 'sByTagName']('*')[0] !== child;
-          },
-          'last-child': function(child) {
-            var brother = child;
-            while((brother = brother.nextSibling) && brother.nodeType != 1) {}
-            return !!brother;
-          },
-          root: function(child) {
-            return child.nodeName.toLowerCase() !== 'html';
-          },
-          'nth-child': function(child, ind) {
-            var i = child.nodeIndex || 0,
-                a = ind[3] = ind[3] ? (ind[2] === '%' ? -1 : 1) * ind[3] : 0,
-                b = ind[1];
-
-            if(i) {
-              return !( (i + a) % b);
-            } else {
-              var brother = child.parentNode.firstChild;
-              i++;
-
-              do {
-                if(
-                   brother.nodeType == 1 && 
-                   (brother.nodeIndex = ++i) && 
-                   child === brother && 
-                   ((i + a) % b)
-                ) {
-                  return 0;
-                }
-              } while(brother = brother.nextSibling);
-              return 1;
-            }
-          },
-          'nth-last-child': function(child, ind) {
-            var i = child.nodeIndexLast || 0,
-                a = ind[3] ? (ind[2] === '%' ? -1 : 1) * ind[3] : 0,
-                b = ind[1];
-            if(i) {
-              return !( (i + a) % b);
-            } else {
-              var brother = child.parentNode.lastChild;
-              i++;
-              do {
-                if(
-                   brother.nodeType == 1 && 
-                   (brother.nodeLastIndex = i++) && 
-                   child === brother && 
-                   ((i + a) % b)
-                ) {
-                  return 0;
-                }
-              } while(brother = brother.previousSibling);
-              return 1;
-            }
-          },
-          empty: function(child) {
-            return !!child.firstChild;
-          },
-          parent: function(child) {
-            return !child.firstChild;
-          },
-          'only-child': function(child) {
-            return child.parentNode[ge + 'sByTagName']('*').length != 1;
-          },
-          checked: function(child) {
-            return !child.checked;
-          },
-          lang: function(child, ind) {
-            return child.lang !== ind && doc.documentElement.lang !== ind;
-          },
-          enabled: function(child) {
-            return child.disabled || child.type === 'hidden';
-          },
-          disabled: function(child) {
-            return !child.disabled;
-          },
-          selected: function(elem){
-            child.parentNode.selectedIndex;
-            return !child.selected;
-          }
-        }
-      });
-       
-      return function(selector, root) {
-        if(root) {
-          selector = root + ' ' + selector;
-        }
-        
-        root = doc;
-        var sets = [];
-
-        if(selector === 'body *') {
-          return doc.body[ge + 'sByTagName']('*');
-        } else if(/^[\w[:#.][\w\]*^|=!]*$/.test(selector)) {          
-          var idx = 0;
-
-          switch(selector.charAt(0)) {
-            case '#':
-              idx  = selector.slice(1);
-              sets = doc[ge + 'ById'](idx);
-
-              if(pl.browser('ie') && sets.id !== idx) {
-                sets = doc.all[idx];
-              }
-
-              sets = sets ? [sets] : [];
-              break;
-            case '.':
-              var klass = selector.slice(1);
-
-              if(classSupport) {
-                sets = (
-                  idx = (sets = root[ge + 'sByClassName'](klass)).length
-                ) ? sets : [];
-              } else {
-                klass = ' ' + klass + ' ';
-                var nodes = root[ge + 'sByTagName']('*'),
-                    i     = 0,
-                    node;
-
-                while(node = nodes[i++]) {
-                  if((' ' + node[cn] + ' ').indexOf(klass) != -1) {
-                    sets[idx++] = node;
-                  }
-                }
-                sets = idx ? sets : [];
-              }
-              break;
-            case ':':
-              var node,
-                  nodes = root[ge + 'sByTagName']('*'),
-                  i = 0,
-                  ind = selector.replace(/[^(]*\(([^)]*)\)/, "$1"),
-                  mod = selector.replace(/\(.*/,'');
- 
-              while(node = nodes[i++]) {
-                if(_.mods[mod] && !_.mods[mod](node, ind)) {
-                  sets[idx++] = node;
-                }
-              }
-              sets = idx ? sets : [];
-              break;
-            case '[':
-              var nodes = root[ge + 'sByTagName']('*'),
-                  node,
-                  i = 0,
-                  attrs = /\[([^!~^*|$ [:=]+)([$^*|]?=)?([^ :\]]+)?\]/.exec(
-                    selector
-                  ),
-                  attr = attrs[1],
-                  eql = attrs[2] || '',
-                  value = attrs[3];
-
-              while(node = nodes[i++]) {
-                if(
-                   _.attr[eql] && 
-                   (
-                     _.attr[eql](node, attr, value) || 
-                     (
-                       attr === 'class' && 
-                       _.attr[eql](node, cn, value)
-                     )
-                   )
-                ) {
-                  sets[idx++] = node;
-                }
-              }
-              sets = idx ? sets : [];
-              break;
-            default:
-              sets = (
-                idx = (sets = root[ge + 'sByTagName'](selector)).length
-              ) ? sets : [];
-              break;
-          }
-        } else {
-          if(qsSupport && selector.indexOf('!=') == -1) {       
-            sets = root.querySelectorAll(
-              selector.replace(/=([^\]]+)/, '="$1"')
-            );
-          } else {
-            var groups = selector.split(/ *, */),
-                gl     = groups.length - 1,
-                concat = !!gl,
-                group, singles, singles_length, single, i, ancestor, 
-                nodes, tag, id, klass, attr, eql, mod, ind, newNodes, 
-                idx, J, child, last, childs, item, h;
-
-            while(group = groups[gl--]) {
-              singles_length = (
-                singles = group
-                  .replace(/(\([^)]*)\+/,"$1%")
-                  .replace(/(\[[^\]]+)~/,"$1&")
-                  .replace(/(~|>|\+)/," $1 ")
-                  .split(/ +/)
-              ).length;
-              i = 0;
-              ancestor = ' ';
-              nodes = [root];
-
-              while(single = singles[i++]) {
-                if(
-                   single !== ' ' && 
-                   single !== '>' && 
-                   single !== '~' && 
-                   single !== '+' && 
-                   nodes
-                ) {
-                  single = single.match(/([^[:.#]+)?(?:#([^[:.#]+))?(?:\.([^[:.]+))?(?:\[([^!&^*|$[:=]+)([!$^*|&]?=)?([^:\]]+)?\])?(?:\:([^(]+)(?:\(([^)]+)\))?)?/);
-                  tag = single[1] || '*';
-                  id = single[2];
-                  klass = single[3] ? ' ' + single[3] + ' ' : '';
-                  attr = single[4];
-                  eql = single[5] || '';
-                  mod = single[7];
-                  ind = 
-                    mod === 'nth-child' || 
-                    mod === 'nth-last-child' ? 
-                      /(?:(-?\d*)n)?(?:(%|-)(\d*))?/.exec(
-                        single[8] === 'even' && 
-                        '2n' || 
-                        single[8] === 'odd' && 
-                        '2n%1' || 
-                        !/\D/.test(single[8]) && 
-                        '0n%' + single[8] || 
-                        single[8]
-                      ) : 
-                      single[8];
-                    
-                  newNodes = [];
-                  idx = J = 0;
-                  last = i == singles_length;
-
-                  while(child = nodes[J++]) {
-                    switch(ancestor) {
-                      case ' ':
-                        childs = child[ge + 'sByTagName'](tag);
-                        h = 0;
-
-                        while(item = childs[h++]) {
-                          if(
-                             (!id || item.id === id) && 
-                             (
-                               !klass || 
-                               (' ' + item[cn] + ' ')
-                                 .indexOf(klass) != -1
-                             ) && (
-                               !attr || 
-                               (
-                                 _.attr[eql] && 
-                                 (
-                                   _.attr[eql](item, attr, single[6]) || 
-                                   (
-                                     attr === 'class' && 
-                                     _.attr[eql](
-                                       item, cn, single[6]
-                                     )
-                                   )
-                                 )
-                               )
-                             ) && 
-                             !item.yeasss && 
-                             !(
-                               _.mods[mod] ? 
-                                 _.mods[mod](item, ind) : 
-                                 mod
-                             )
-                          ) {
-                            if(last) {
-                              item.yeasss = 1;
-                            }
-                            newNodes[idx++] = item;
-                          }
-                        }
-                        break;
-                      case '~':
-                        tag = tag.toLowerCase();
-
-                        while(
-                              (child = child.nextSibling) && 
-                              !child.yeasss
-                        ) {
-                          if(
-                             child.nodeType == 1 && 
-                             (
-                               tag === '*' || 
-                               child.nodeName.toLowerCase() === tag
-                             ) && 
-                             (!id || child.id === id) && 
-                             (
-                               !klass || 
-                               (' ' + child[cn] + ' ')
-                                 .indexOf(klass) != -1
-                             ) && (
-                               !attr || 
-                               (
-                                 _.attr[eql] && 
-                                 (
-                                   _.attr[eql](item, attr, single[6]) || 
-                                   (
-                                     attr === 'class' && 
-                                     _.attr[eql](
-                                       item, cn, single[6]
-                                     )
-                                   )
-                                 )
-                               )
-                             ) && 
-                             !child.yeasss && 
-                             !(
-                               _.mods[mod] ? 
-                                 _.mods[mod](child, ind) : 
-                                 mod
-                            )
-                          ) {
-                            if(last) {
-                             child.yeasss = 1;
-                            }
-                            newNodes[idx++] = child;
-                          }
-                        }
-                        break;
-                      case '+':
-                        while(
-                              (child = child.nextSibling) && 
-                              child.nodeType != 1
-                        ) {}
-                        if(
-                           child && 
-                           (
-                             child.nodeName.toLowerCase() === 
-                               tag.toLowerCase() || 
-                             tag === '*'
-                           ) && (
-                             !id || 
-                             child.id === id
-                           ) && (
-                             !klass || 
-                             (' ' + item[cn] + ' ')
-                               .indexOf(klass) != -1
-                           ) && (
-                             !attr || 
-                             (
-                               _.attr[eql] && 
-                               (
-                                 _.attr[eql](item, attr, single[6]) || 
-                                 (
-                                   attr === 'class' && 
-                                   _.attr[eql](
-                                     item, cn, single[6]
-                                   )
-                                 )
-                               )
-                             )
-                           ) && 
-                           !child.yeasss && 
-                           !(
-                             _.mods[mod] ? 
-                               _.mods[mod](child, ind) : 
-                               mod
-                           )
-                        ) {
-                          if(last) {
-                            child.yeasss = 1;
-                          }
-                          newNodes[idx++] = child;
-                        }
-                        break;
-                      case '>':
-                        childs = child[ge + 'sByTagName'](tag);
-                        i = 0;
-                        while(item = childs[i++]) {
-                          if(
-                             item.parentNode === child && 
-                             (!id || item.id === id) && 
-                             (
-                               !klass || 
-                               (' ' + item[cn] + ' ')
-                                 .indexOf(klass) != -1
-                               ) && (
-                                 !attr || 
-                                 (
-                                   _.attr[eql] && 
-                                   (
-                                     _.attr[eql](item, attr, single[6]) || 
-                                     (
-                                       attr === 'class' && 
-                                       _.attr[eql](
-                                         item, cn, single[6]
-                                       )
-                                     )
-                                   )
-                                 )
-                               ) && 
-                               !item.yeasss && 
-                               !(
-                                 _.mods[mod] ? 
-                                   _.mods[mod](item, ind) : 
-                                   mod
-                               )
-                          ) {
-                            if(last) {
-                              item.yeasss = 1;
-                            }
-                            newNodes[idx++] = item;
-                          }
-                        }
-                        break;
-                    }
-                  }
-                  nodes = newNodes;
-                } else {
-                  ancestor = single;
-                }
-              }
-
-              if(concat) {
-                if(!nodes.concat) {
-                  newNodes = [];
-                  h = 0;
-
-                  while(item = nodes[h]) {
-                    newNodes[h++] = item;
-                  }
-                  nodes = newNodes;
-                }
-                sets = nodes.concat(sets.length == 1 ? sets[0] : sets);
-              } else {
-                sets = nodes;
-              }
-            }
-            idx = sets.length;
-           
-            while(idx--) {
-              sets[idx].yeasss = sets[idx].nodeIndex = 
-                sets[idx].nodeIndexLast = n;
-            }
-          }
-        }
-
-        return sets;
-      };
-    })({})
-  });
 })();
 })(this, document, 'prototype', 'addEventListener', 
    'getElement', 'className', 'null', 'undef', 
