@@ -1168,262 +1168,262 @@
             selector.replace(/=([^\]]+)/, '="$1"')
           );
         } else {
-        var groups = selector.split(/ *, */),
-            gl     = groups.length - 1,
-            concat = !!gl,
-            group, singles, singles_length, single, i, ancestor, 
-            nodes, tag, id, klass, attr, eql, mod, ind, newNodes, 
-            idx, J, child, last, childs, item, h;
-
-        while(group = groups[gl--]) {
-          singles_length = (
-            singles = group
-            .replace(/(\([^)]*)\+/,"$1%")
-            .replace(/(\[[^\]]+)~/,"$1&")
-            .replace(/(~|>|\+)/," $1 ")
-            .split(/ +/)
-          ).length;
-          i = 0;
-          ancestor = ' ';
-          nodes = [root];
-
-          while(single = singles[i++]) {
-            if(
-               single !== ' ' && 
-               single !== '>' && 
-               single !== '~' && 
-               single !== '+' && 
-               nodes
-            ) {
-            single = single.match(/([^[:.#]+)?(?:#([^[:.#]+))?(?:\.([^[:.]+))?(?:\[([^!&^*|$[:=]+)([!$^*|&]?=)?([^:\]]+)?\])?(?:\:([^(]+)(?:\(([^)]+)\))?)?/);
-            tag = single[1] || '*';
-            id = single[2];
-            klass = single[3] ? ' ' + single[3] + ' ' : '';
-            attr = single[4];
-            eql = single[5] || '';
-            mod = single[7];
-            ind = 
-              mod === 'nth-child' || 
-              mod === 'nth-last-child' ? 
-                /(?:(-?\d*)n)?(?:(%|-)(\d*))?/.exec(
-                single[8] === 'even' && 
-                '2n' || 
-                single[8] === 'odd' && 
-                '2n%1' || 
-                !/\D/.test(single[8]) && 
-                '0n%' + single[8] || 
-                single[8]
-                ) : 
-                single[8];
-              
-            newNodes = [];
-            idx = J = 0;
-            last = i == singles_length;
-
-            while(child = nodes[J++]) {
-              switch(ancestor) {
-                case ' ':
-                childs = child[ge + 'sByTagName'](tag);
-                h = 0;
-
-                while(item = childs[h++]) {
-                  if(
-                     (!id || item.id === id) && 
-                     (
-                     !klass || 
-                     (' ' + item[cn] + ' ')
-                       .indexOf(klass) != -1
-                     ) && (
-                     !attr || 
-                     (
-                       _.attr[eql] && 
+          var groups = selector.split(/ *, */),
+              gl     = groups.length - 1,
+              concat = !!gl,
+              group, singles, singles_length, single, i, ancestor, 
+              nodes, tag, id, klass, attr, eql, mod, ind, newNodes, 
+              idx, J, child, last, childs, item, h;
+  
+          while(group = groups[gl--]) {
+            singles_length = (
+              singles = group
+              .replace(/(\([^)]*)\+/,"$1%")
+              .replace(/(\[[^\]]+)~/,"$1&")
+              .replace(/(~|>|\+)/," $1 ")
+              .split(/ +/)
+            ).length;
+            i = 0;
+            ancestor = ' ';
+            nodes = [root];
+  
+            while(single = singles[i++]) {
+              if(
+                 single !== ' ' && 
+                 single !== '>' && 
+                 single !== '~' && 
+                 single !== '+' && 
+                 nodes
+              ) {
+              single = single.match(/([^[:.#]+)?(?:#([^[:.#]+))?(?:\.([^[:.]+))?(?:\[([^!&^*|$[:=]+)([!$^*|&]?=)?([^:\]]+)?\])?(?:\:([^(]+)(?:\(([^)]+)\))?)?/);
+              tag = single[1] || '*';
+              id = single[2];
+              klass = single[3] ? ' ' + single[3] + ' ' : '';
+              attr = single[4];
+              eql = single[5] || '';
+              mod = single[7];
+              ind = 
+                mod === 'nth-child' || 
+                mod === 'nth-last-child' ? 
+                  /(?:(-?\d*)n)?(?:(%|-)(\d*))?/.exec(
+                  single[8] === 'even' && 
+                  '2n' || 
+                  single[8] === 'odd' && 
+                  '2n%1' || 
+                  !/\D/.test(single[8]) && 
+                  '0n%' + single[8] || 
+                  single[8]
+                  ) : 
+                  single[8];
+                
+              newNodes = [];
+              idx = J = 0;
+              last = i == singles_length;
+  
+              while(child = nodes[J++]) {
+                switch(ancestor) {
+                  case ' ':
+                  childs = child[ge + 'sByTagName'](tag);
+                  h = 0;
+  
+                  while(item = childs[h++]) {
+                    if(
+                       (!id || item.id === id) && 
                        (
-                         _.attr[eql](item, attr, single[6]) || 
-                         (
-                         attr === 'class' && 
-                         _.attr[eql](
-                           item, cn, single[6]
-                         )
-                         )
-                       )
-                     )
-                     ) && 
-                     !item.yeasss && 
-                     !(
-                     _.mods[mod] ? 
-                       _.mods[mod](item, ind) : 
-                       mod
-                     )
-                  ) {
-                    if(last) {
-                    item.yeasss = 1;
-                    }
-                    newNodes[idx++] = item;
-                  }
-                }
-                break;
-                case '~':
-                tag = tag.toLowerCase();
-
-                while(
-                    (child = child.nextSibling) && 
-                    !child.yeasss
-                ) {
-                  if(
-                     child.nodeType == 1 && 
-                     (
-                     tag === '*' || 
-                     child.nodeName.toLowerCase() === tag
-                     ) && 
-                     (!id || child.id === id) && 
-                     (
-                     !klass || 
-                     (' ' + child[cn] + ' ')
-                       .indexOf(klass) != -1
-                     ) && (
-                     !attr || 
-                     (
-                       _.attr[eql] && 
-                       (
-                         _.attr[eql](item, attr, single[6]) || 
-                         (
-                         attr === 'class' && 
-                         _.attr[eql](
-                           item, cn, single[6]
-                         )
-                         )
-                       )
-                     )
-                     ) && 
-                     !child.yeasss && 
-                     !(
-                     _.mods[mod] ? 
-                       _.mods[mod](child, ind) : 
-                       mod
-                    )
-                  ) {
-                    if(last) {
-                     child.yeasss = 1;
-                    }
-                    newNodes[idx++] = child;
-                  }
-                }
-                break;
-                case '+':
-                while(
-                    (child = child.nextSibling) && 
-                    child.nodeType != 1
-                ) {}
-                if(
-                   child && 
-                   (
-                     child.nodeName.toLowerCase() === 
-                     tag.toLowerCase() || 
-                     tag === '*'
-                   ) && (
-                     !id || 
-                     child.id === id
-                   ) && (
-                     !klass || 
-                     (' ' + item[cn] + ' ')
-                     .indexOf(klass) != -1
-                   ) && (
-                     !attr || 
-                     (
-                     _.attr[eql] && 
-                     (
-                       _.attr[eql](item, attr, single[6]) || 
-                       (
-                         attr === 'class' && 
-                         _.attr[eql](
-                         item, cn, single[6]
-                         )
-                       )
-                     )
-                     )
-                   ) && 
-                   !child.yeasss && 
-                   !(
-                     _.mods[mod] ? 
-                     _.mods[mod](child, ind) : 
-                     mod
-                   )
-                ) {
-                  if(last) {
-                    child.yeasss = 1;
-                  }
-                  newNodes[idx++] = child;
-                }
-                break;
-                case '>':
-                childs = child[ge + 'sByTagName'](tag);
-                i = 0;
-                while(item = childs[i++]) {
-                  if(
-                     item.parentNode === child && 
-                     (!id || item.id === id) && 
-                     (
-                     !klass || 
-                     (' ' + item[cn] + ' ')
-                       .indexOf(klass) != -1
-                     ) && (
+                       !klass || 
+                       (' ' + item[cn] + ' ')
+                         .indexOf(klass) != -1
+                       ) && (
                        !attr || 
                        (
                          _.attr[eql] && 
                          (
-                         _.attr[eql](item, attr, single[6]) || 
-                         (
+                           _.attr[eql](item, attr, single[6]) || 
+                           (
                            attr === 'class' && 
                            _.attr[eql](
                              item, cn, single[6]
                            )
-                         )
+                           )
                          )
                        )
-                     ) && 
-                     !item.yeasss && 
-                     !(
+                       ) && 
+                       !item.yeasss && 
+                       !(
                        _.mods[mod] ? 
                          _.mods[mod](item, ind) : 
                          mod
+                       )
+                    ) {
+                      if(last) {
+                      item.yeasss = 1;
+                      }
+                      newNodes[idx++] = item;
+                    }
+                  }
+                  break;
+                  case '~':
+                  tag = tag.toLowerCase();
+  
+                  while(
+                      (child = child.nextSibling) && 
+                      !child.yeasss
+                  ) {
+                    if(
+                       child.nodeType == 1 && 
+                       (
+                       tag === '*' || 
+                       child.nodeName.toLowerCase() === tag
+                       ) && 
+                       (!id || child.id === id) && 
+                       (
+                       !klass || 
+                       (' ' + child[cn] + ' ')
+                         .indexOf(klass) != -1
+                       ) && (
+                       !attr || 
+                       (
+                         _.attr[eql] && 
+                         (
+                           _.attr[eql](item, attr, single[6]) || 
+                           (
+                           attr === 'class' && 
+                           _.attr[eql](
+                             item, cn, single[6]
+                           )
+                           )
+                         )
+                       )
+                       ) && 
+                       !child.yeasss && 
+                       !(
+                       _.mods[mod] ? 
+                         _.mods[mod](child, ind) : 
+                         mod
+                      )
+                    ) {
+                      if(last) {
+                       child.yeasss = 1;
+                      }
+                      newNodes[idx++] = child;
+                    }
+                  }
+                  break;
+                  case '+':
+                  while(
+                      (child = child.nextSibling) && 
+                      child.nodeType != 1
+                  ) {}
+                  if(
+                     child && 
+                     (
+                       child.nodeName.toLowerCase() === 
+                       tag.toLowerCase() || 
+                       tag === '*'
+                     ) && (
+                       !id || 
+                       child.id === id
+                     ) && (
+                       !klass || 
+                       (' ' + item[cn] + ' ')
+                       .indexOf(klass) != -1
+                     ) && (
+                       !attr || 
+                       (
+                       _.attr[eql] && 
+                       (
+                         _.attr[eql](item, attr, single[6]) || 
+                         (
+                           attr === 'class' && 
+                           _.attr[eql](
+                           item, cn, single[6]
+                           )
+                         )
+                       )
+                       )
+                     ) && 
+                     !child.yeasss && 
+                     !(
+                       _.mods[mod] ? 
+                       _.mods[mod](child, ind) : 
+                       mod
                      )
                   ) {
                     if(last) {
-                    item.yeasss = 1;
+                      child.yeasss = 1;
                     }
-                    newNodes[idx++] = item;
+                    newNodes[idx++] = child;
                   }
+                  break;
+                  case '>':
+                  childs = child[ge + 'sByTagName'](tag);
+                  i = 0;
+                  while(item = childs[i++]) {
+                    if(
+                       item.parentNode === child && 
+                       (!id || item.id === id) && 
+                       (
+                       !klass || 
+                       (' ' + item[cn] + ' ')
+                         .indexOf(klass) != -1
+                       ) && (
+                         !attr || 
+                         (
+                           _.attr[eql] && 
+                           (
+                           _.attr[eql](item, attr, single[6]) || 
+                           (
+                             attr === 'class' && 
+                             _.attr[eql](
+                               item, cn, single[6]
+                             )
+                           )
+                           )
+                         )
+                       ) && 
+                       !item.yeasss && 
+                       !(
+                         _.mods[mod] ? 
+                           _.mods[mod](item, ind) : 
+                           mod
+                       )
+                    ) {
+                      if(last) {
+                      item.yeasss = 1;
+                      }
+                      newNodes[idx++] = item;
+                    }
+                  }
+                  break;
                 }
-                break;
+              }
+              nodes = newNodes;
+              } else {
+              ancestor = single;
               }
             }
-            nodes = newNodes;
+  
+            if(concat) {
+              if(!nodes.concat) {
+              newNodes = [];
+              h = 0;
+  
+              while(item = nodes[h]) {
+                newNodes[h++] = item;
+              }
+              nodes = newNodes;
+              }
+              sets = nodes.concat(sets.length == 1 ? sets[0] : sets);
             } else {
-            ancestor = single;
+              sets = nodes;
             }
           }
-
-          if(concat) {
-            if(!nodes.concat) {
-            newNodes = [];
-            h = 0;
-
-            while(item = nodes[h]) {
-              newNodes[h++] = item;
-            }
-            nodes = newNodes;
-            }
-            sets = nodes.concat(sets.length == 1 ? sets[0] : sets);
-          } else {
-            sets = nodes;
+          idx = sets.length;
+           
+          while(idx--) {
+            sets[idx].yeasss = sets[idx].nodeIndex = 
+              sets[idx].nodeIndexLast = n;
           }
-        }
-        idx = sets.length;
-         
-        while(idx--) {
-          sets[idx].yeasss = sets[idx].nodeIndex = 
-            sets[idx].nodeIndexLast = n;
-        }
         }
       }
 
