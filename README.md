@@ -20,7 +20,7 @@ __Browsers, which are supported:__
 
 ---
 
-Current version is 1.0.0
+Current version is 1.0.1
 
 __Documentation__: [Docs](/chernikovalexey/Prevel/tree/master/Docs)
 
