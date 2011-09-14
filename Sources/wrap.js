@@ -18,7 +18,9 @@
 **/
 
 (function(win, doc, proto, ael, ge, cn, nn, u, newRegExp, n, ef, uf) {
+
   // [Code]
+
 })(this, document, 'prototype', 'addEventListener', 
    'getElement', 'className', 'null', 'undef', 
    '<([A-z]+)>', null, function() {});
