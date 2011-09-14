@@ -10,6 +10,7 @@
 (function() {
   
   //Fix attribute names because of .setAttribute
+  var __this;
   var fixAttr = {
     'className': 'class',
     'cssFloat':  'float',
@@ -99,7 +100,8 @@
     // Recursion's faster than loop
     parent: function(step) {
       if(!step) var step = 1;
-      return rParent(this.elements[0], step);
+      this.elements = [rParent(this.elements[0], step)];
+      return this;
     },
     
     remove: function() {
@@ -560,7 +562,7 @@
     fixStyle: function(str) {
       if(!str.match('-')) return str;
       var parts = str.split('-');
-      return parts[0] + parts[1].toUpperCase();  
+      return parts[0] + parts[1].charAt(0).toUpperCase() + parts[1].substr(1);  
     },
     
     // Cross-browser opacity
