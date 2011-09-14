@@ -32,7 +32,9 @@
   // Cached check if accessors are availiable
   var accessors = 
     !!Object[proto].__lookupGetter__ && 
-    !!Object[proto].__lookupSetter__;
+    !!Object[proto].__lookupSetter__ &&
+    !!Object[proto].__defineGetter__ &&
+    !!Object[proto].__defineSetter;
 
   // Local copy of `pl`
   var pl = (function() {
@@ -184,5 +186,5 @@
   });
 
   // Add `pl` to the global scope
-  pl.extend(win, {pl: pl, prevel: pl});
+  win.pl = pl;
 })();
