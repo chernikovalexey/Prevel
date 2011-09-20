@@ -20,8 +20,6 @@ __Browsers, which are supported:__
 
 ---
 
-Current version is 1.0.1
-
 __Documentation__: [Docs](/chernikovalexey/Prevel/tree/master/Docs)
 
 __Full version__ for developers: [Prevel-full.js](/chernikovalexey/Prevel/blob/master/prevel-full.js)
