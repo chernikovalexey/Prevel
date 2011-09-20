@@ -1,4 +1,4 @@
-/* Prevel Framework v1.0.1
+/* Prevel Framework v1.0.0
  * http://github.com/chernikovalexey/Prevel
  * 
  * Copyright 2011, Alexey Chernikov
@@ -16,7 +16,7 @@
  *  - MIT License (http://opensource.org/licenses/mit-license.php)
  *  - GNU GPL (http://opensource.org/licenses/gpl-license.php)
 **/
- 
+
 (function(win, doc, proto, ael, ge, cn, nn, u, newRegExp, n, ef, uf) {
 
 /* Module: Core.js
@@ -37,7 +37,7 @@
  *  - GNU LGPL (http://opensource.org/licenses/lgpl-license.php)
  *  - MIT License (http://opensource.org/licenses/mit-license.php)
 **/
- 
+
 (function() {
   
   // Short names for almost all the types
@@ -56,7 +56,7 @@
     !!Object[proto].__lookupSetter__ &&
     !!Object[proto].__defineGetter__ &&
     !!Object[proto].__defineSetter;
- 
+
   // Local copy of `pl`
   var pl = (function() {
     return function(o, context, index) {
@@ -97,7 +97,7 @@
     
     return Child;
   };
- 
+
   pl.extend({
     // Extend the Object.prototype
     implement: function(Child, Parent) {
@@ -197,7 +197,7 @@
         safari_khtml: !isChrome && /khtml/i.test(ua),
         safari: !isChrome && /webkit|safari/i.test(ua)
       };
- 
+
       for(var key in browser) {
         if(browser[key]) {
           return name === key || key;
@@ -205,11 +205,10 @@
       }
     }
   });
- 
+
   // Add `pl` to the global scope
   win.pl = pl;
 })();
-
 /* Module: Ajax.js
  * Requirements: Core.js
  * Provides: Ajax.
@@ -218,7 +217,7 @@
  *  - GNU LGPL (http://opensource.org/licenses/lgpl-license.php)
  *  - MIT License (http://opensource.org/licenses/mit-license.php)
 **/
- 
+
 (function() {
   pl.extend({
     ajax: function(params) {
@@ -303,7 +302,7 @@
     }
   });
 })();
- 
+
 /* Module: Dom.js
  * Requirements: Core.js
  * Provides: Different interactions with the DOM.
@@ -312,7 +311,7 @@
  *  - GNU LGPL (http://opensource.org/licenses/lgpl-license.php)
  *  - MIT License (http://opensource.org/licenses/mit-license.php)
 **/
- 
+
 (function() {
   
   //Fix attribute names because of .setAttribute
@@ -326,7 +325,7 @@
   // Add `fn` to `pl`, at first (to reduce nested level)
   pl.extend({
     fn: {}, 
-    find: function(selector, root) { // Basic   
+    find: function(selector, root) { // Basic
       return doc.querySelectorAll(root ? root + ' ' + selector : selector);
     }
   });
@@ -367,10 +366,10 @@
             Events.ready(o);
             break; 
           case 'obj':
-            _int = [o];
+            _int = o[0] ? o : [o];
             break;
         }
- 
+
         this.elements = _int;
         this.selector = arguments;
         __this = this;
@@ -420,18 +419,21 @@
     addClass: function(c) {
       pl.each(this.elements, function() {
         // If this class already exists
-        if(pl.inArray(c, this[cn].split(' ')) !== -1) return;
+        if(!this[cn] || pl.inArray(c, this[cn].split(' ')) !== -1) return;
         this[cn] += (this[cn] ? ' ' : '') + c;
       });
       return this;
     },
     
     hasClass: function(c) {
-      return pl.inArray(c, this.elements[0][cn].split(' ')) !== -1;
+      return this.elements[0] && this.elements[0][cn] ? 
+        pl.inArray(c, this.elements[0][cn].split(' ')) !== -1 : 
+        false;
     },
     
     removeClass: function(c) {
       pl.each(this.elements, function() {
+        if(!this[cn]) return;
         var cl = this[cn].split(' ');
         var from = pl.inArray(c, cl);
         
@@ -439,7 +441,7 @@
         if(from === -1) return;
         
         cl.splice(from, 1);
- 
+
         if(pl.empty(cl)) {
           this.removeAttribute('class');
         } else {
@@ -451,7 +453,7 @@
     
     attr: function(attr, set) {
       attr = fixAttr[attr] || attr;
- 
+
       if(set) {
         pl.each(this.elements, function() {
           this.setAttribute(attr, set);
@@ -473,13 +475,13 @@
     
     removeAttr: function(attr) {
       attr = fixAttr[attr] || attr;
- 
+
       pl.each(this.elements, function() {
         this.removeAttribute(attr);
       });
       return this;
     },
- 
+
     css: function(style, set) {
       if(set) {
         style = curCSS.fixStyle(style);
@@ -509,7 +511,7 @@
       }
       return this;
     },
- 
+
     each: function(fn) {
       pl.each(__this.elements, function() {
         fn.call(this);
@@ -532,7 +534,7 @@
         if(pl(this).css('display') !== 'none') return;           
         pl(this).css('display', this.getAttribute('plrd') || '');
       });
- 
+
       return this;
     },
     
@@ -638,7 +640,7 @@
   });
   
   pl.implement(pl.fn.init, pl.fn);
- 
+
   //Private methods
   var innerText = pl.browser('ie') ? 'innerText' : 'textContent';
   var Events = {
@@ -829,11 +831,11 @@
       return __this;
     }
   };
- 
+
   var inner = function(e, method, ins, to) {
     var init = e;
     var e = init.elements[0];
- 
+
     if(!ins) {
       return e[method];
     } else {
@@ -864,18 +866,18 @@
   };
   
   var curCSS = {
-    // E.g. 'font-size' to 'fontSize'
+    // E.g. 'font-siz' to 'fontSize'
     fixStyle: function(str) {
       if(!str.match('-')) return str;
       var parts = str.split('-');
-      return parts[0] + parts[1].charAt(0).toUpperCase() + parts[1].substr(1); 
+      return parts[0] + parts[1].charAt(0).toUpperCase() + parts[1].substr(1);  
     },
     
     // Cross-browser opacity
     fixOpacity: function(val) {
       var op    = 'opacity', 
           fixed = [op, val];
- 
+
       switch(pl.browser()) {
         case 'ie7':
           fixed[0] = 'filter';
