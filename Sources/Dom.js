@@ -61,7 +61,7 @@
             Events.ready(o);
             break; 
           case 'obj':
-            _int = [o];
+            _int = o[0] ? o : [o];
             break;
         }
 
@@ -114,18 +114,21 @@
     addClass: function(c) {
       pl.each(this.elements, function() {
         // If this class already exists
-        if(pl.inArray(c, this[cn].split(' ')) !== -1) return;
+        if(!this[cn] || pl.inArray(c, this[cn].split(' ')) !== -1) return;
         this[cn] += (this[cn] ? ' ' : '') + c;
       });
       return this;
     },
     
     hasClass: function(c) {
-      return pl.inArray(c, this.elements[0][cn].split(' ')) !== -1;
+      return this.elements[0] && this.elements[0][cn] ? 
+        pl.inArray(c, this.elements[0][cn].split(' ')) !== -1 : 
+        false;
     },
     
     removeClass: function(c) {
       pl.each(this.elements, function() {
+        if(!this[cn]) return;
         var cl = this[cn].split(' ');
         var from = pl.inArray(c, cl);
         
