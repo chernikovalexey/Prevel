@@ -1,4 +1,4 @@
-/* Prevel Framework v1.0.1
+/* Prevel Framework v1.0.2
  * http://github.com/chernikovalexey/Prevel
  * 
  * Copyright 2011, Alexey Chernikov
