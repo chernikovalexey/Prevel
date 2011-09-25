@@ -13,6 +13,12 @@ There're a few variants of using `pl()`.
   ```javascript
   pl('div', 'body', 0); // The first div from the body
   pl('div a'); // All the links from all the divs
+  
+  // Create a canvas element width width=600 and height=200
+  pl('<canvas>', {
+    width: 600,
+    height: 200
+  });
   ```
 
 ---
