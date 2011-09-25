@@ -6,7 +6,7 @@
 define('PL_CURDIR', './');
 define('PL_DIR', PL_CURDIR . 'Sources/');
 
-$std = fopen('php:stderr', 'w');
+$std = fopen('php://stderr', 'w');
 fwrite($std, "Getting all the availiable modules...\n");
 $sources = opendir(PL_DIR);
 $prohibited = array('.', '..', 'wrap.js', 'core.js');
@@ -45,7 +45,7 @@ $wrap = file_get_contents(PL_DIR . 'wrap.js');
 
 $build = strtr($wrap, array(
     '%version%' => isset($argv[0]) ? $argv[0] : '1.0.0',
-    '   [Code]' => $build
+    '  // [Code]' => $build
 ));
 fwrite($std, "  Ready.");
 
