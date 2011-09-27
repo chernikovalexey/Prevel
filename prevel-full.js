@@ -1,4 +1,4 @@
-/* Prevel Framework v1.0.2
+/* Prevel Framework v1.0.4
  * http://github.com/chernikovalexey/Prevel
  * 
  * Copyright 2011, Alexey Chernikov
@@ -175,10 +175,12 @@
     },
     
     JSON: function(data) {
-      // Checks if JSON is valid
-      return (!(/[^,:{}[]0-9.-+Eaeflnr-u nrt]/.test(
-        data.replace(/"(.|[^"])*"/g, ''))) && eval('(' + data + ')')
-      );
+      // Use native function if possible
+      return win.JSON && win.JSON.parse ? 
+        win.JSON.parse(data) :
+        (!(/[^,:{}[]0-9.-+Eaeflnr-u nrt]/.test(
+          data.replace(/"(.|[^"])*"/g, ''))) && eval('(' + data + ')')
+        );
     },
     
     browser: function(name) {
@@ -200,7 +202,7 @@
 
       for(var key in browser) {
         if(browser[key]) {
-          return name === key || key;
+          return name ? name === key : key;
         }
       }
     }
@@ -209,6 +211,7 @@
   // Add `pl` to the global scope
   win.pl = pl;
 })();
+
 /* Module: Ajax.js
  * Requirements: Core.js
  * Provides: Ajax.
@@ -244,7 +247,7 @@
         }
         
         if(!Request) {
-          return alert('Could not create an XMLHttpRequest instance.');
+          return alert('Could not create a XMLHttpRequest instance.');
         }
         
         // Fix related with `attachEvent`
@@ -314,7 +317,7 @@
 
 (function() {
   
-  //Fix attribute names because of .setAttribute
+  // Fix attribute names because of .setAttribute
   var __this;
   var fixAttr = {
     'className': 'class',
@@ -419,7 +422,7 @@
     addClass: function(c) {
       pl.each(this.elements, function() {
         // If this class already exists
-        if(!this[cn] || pl.inArray(c, this[cn].split(' ')) !== -1) return;
+        if(!this[cn] || ~~pl.inArray(c, this[cn].split(' '))) return;
         this[cn] += (this[cn] ? ' ' : '') + c;
       });
       return this;
@@ -427,18 +430,18 @@
     
     hasClass: function(c) {
       return this.elements[0] && this.elements[0][cn] ? 
-        pl.inArray(c, this.elements[0][cn].split(' ')) !== -1 : 
+        ~~pl.inArray(c, this.elements[0][cn].split(' ')) : 
         false;
     },
     
     removeClass: function(c) {
       pl.each(this.elements, function() {
         if(!this[cn]) return;
-        var cl = this[cn].split(' ');
-        var from = pl.inArray(c, cl);
+        var cl = this[cn].split(' '),
+            from = pl.inArray(c, cl);
         
         // If this class does not exist
-        if(from === -1) return;
+        if(~~from) return;
         
         cl.splice(from, 1);
 
@@ -721,8 +724,21 @@
         if(!event.target) {
           event.target = event.srcElement;
         }
+    
+        if(event.pageX == n && event.clientX != n) {
+          var html = doc.documentElement, 
+              body = doc.body;
+          event.pageX = 
+            event.clientX + 
+            (html && html.scrollLeft || body && body.scrollLeft || 0) - 
+            (html.clientLeft || 0);
+          event.pageY = 
+            event.clientY + 
+            (html && html.scrollTop || body && body.scrollTop || 0) - 
+            (html.clientTop || 0);
+        }
         
-        if(!event.which && event.button) {
+        if(pl.type(event.which, 'undef') && !pl.type(event.button, 'undef')) {
           event.which = (event.button & 1 ? 
             1 : 
             (event.button & 2 ? 
@@ -737,7 +753,7 @@
       
       function handleCommon(e) {
         e = fixEvt(e);
-        
+                
         var handlerList = this.evt[e.type];
         
         for(var key in handlerList) {
@@ -752,9 +768,15 @@
       
       return {
         bind: function(el, evt, fn) {
-          if(pl.browser('ie') && el.setInterval && el !== win) {
-            el = win;
-          }
+          if(el.setInterval && !el.frameElement) {
+            if(el !== win) el = win;
+            
+            if(~~pl.inArray(evt, unResolvedEvt)) {
+              return (window.onload = function() {
+                pl(doc.body).bind(evt, fn);
+              });
+            }
+          }      
           
           if(!fn.turnID) {
             fn.turnID = ++turns;
@@ -924,6 +946,12 @@
       );
     }
   };
+  
+  var unResolvedEvt = [
+    'click', 'mouseover', 'mouseout',
+    'keyup', 'keydown', 'dblclick',
+    'mousedown', 'mouseup', 'keypress'
+  ];
   
   // "Deep parent" (pl().parent())
   var rParent = function(elem, step) {
