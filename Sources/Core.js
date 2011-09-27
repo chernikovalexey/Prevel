@@ -154,10 +154,12 @@
     },
     
     JSON: function(data) {
-      // Checks if JSON is valid
-      return (!(/[^,:{}[]0-9.-+Eaeflnr-u nrt]/.test(
-        data.replace(/"(.|[^"])*"/g, ''))) && eval('(' + data + ')')
-      );
+      // Use native function if possible
+      return win.JSON && win.JSON.parse ? 
+        win.JSON.parse(data) :
+        (!(/[^,:{}[]0-9.-+Eaeflnr-u nrt]/.test(
+          data.replace(/"(.|[^"])*"/g, ''))) && eval('(' + data + ')')
+        );
     },
     
     browser: function(name) {
@@ -179,7 +181,7 @@
 
       for(var key in browser) {
         if(browser[key]) {
-          return name === key || key;
+          return name ? name === key : key;
         }
       }
     }
