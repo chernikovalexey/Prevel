@@ -331,6 +331,16 @@
         } catch(er) {}
       });
       return this;
+    },
+    
+    appendTo: function(selector, context, index) {
+      pl(selector, context, index).append(this.elements[0]);
+      return this;
+    },
+    
+    prependTo: function(selector, context, index) {
+      pl(selector, context, index).prepend(this.elements[0]);
+      return this;
     }
   });
   
