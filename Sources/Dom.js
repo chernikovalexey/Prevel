@@ -576,7 +576,7 @@
   // Create new element
   var create = function(o, params) {
     var ns = doc.createElement(o);
-    return params ? pl.extend(ns, params) : ns;
+    return params ? pl(ns).attr(params).get() : ns;
   };
   
   var curCSS = {
