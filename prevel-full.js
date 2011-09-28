@@ -1,4 +1,4 @@
-/* Prevel Framework v1.0.6
+/* Prevel Framework v1.0.7
  * http://github.com/chernikovalexey/Prevel
  * 
  * Copyright 2011, Alexey Chernikov
@@ -1032,7 +1032,7 @@
       
       mods: {
         'first-child': function(child) {
-          
+          return child.parentNode.getElementsByTagName('*')[0] !== child;
         },
         'last-child': function(child) {
           var brother = child;
