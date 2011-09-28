@@ -57,7 +57,7 @@
       
       mods: {
         'first-child': function(child) {
-          
+          return child.parentNode.getElementsByTagName('*')[0] !== child;
         },
         'last-child': function(child) {
           var brother = child;
