@@ -1,4 +1,4 @@
-/* Prevel Framework v1.0.4
+/* Prevel Framework v1.0.5
  * http://github.com/chernikovalexey/Prevel
  * 
  * Copyright 2011, Alexey Chernikov
@@ -776,7 +776,7 @@
                 pl(doc.body).bind(evt, fn);
               });
             }
-          }      
+          }
           
           if(!fn.turnID) {
             fn.turnID = ++turns;
@@ -884,7 +884,8 @@
   // Create new element
   var create = function(o, params) {
     var ns = doc.createElement(o);
-    return params ? pl.extend(ns, params) : ns;
+    console.log( params );
+    return params ? pl(ns).attr(params).get() : ns;
   };
   
   var curCSS = {
