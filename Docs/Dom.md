@@ -329,3 +329,32 @@ Appends `Elements` to the beginning of each of selected elements.
   pl('div').prepend('<p>Something before all the content.</p>');
   pl('div').prepend( pl('<p>').html('Something before all the content.').get() ); // The same result
   ```
+  
+---
+
+###pl('<tagName>' [, attributes]).appendTo(selector, context, index)
+
+Appends `<tagName>` extended with `attributes` to `selector` (in context of `context`, if it's defined).
+
+  ```javascript
+  // Adds a paragraph to the end of all the DIVs
+  pl('<p>').appendTo('div');
+  
+  // Adds a link to the end of only the first DIV
+  pl('<a>', {href: '#'}).appendTo('div', 0);
+  ```
+
+---
+
+###pl('<tagName>' [, attributes]).prependTo(selector, context, index)
+
+Adds `<tagName>` extended with `attributes` to the beggining of each element matched with `selector` 
+(in context of `context`, if it's defined).
+
+  ```javascript
+  // Adds a paragraph to the beginning of all the DIVs
+  pl('<p>').prependTo('div');
+  
+  // Adds a link to the beginning of only the first DIV
+  pl('<a>', {href: '#'}).prependTo('div', 0);
+  ```
