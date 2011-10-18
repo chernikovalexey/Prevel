@@ -89,18 +89,9 @@
     },
     
     type: function(o, is) {
-      var iUf;
-      if(pl.isArray(o)) {
-        iUf = 'arr';
-      } else if(o instanceof RegExp) {
-        iUf = 'regexp';
-      } else if(o instanceof Date) {
-        iUf = 'date';
-      } else if(o === n) {
-        iUf = nn;
-      } else {
-        iUf = types[typeof o];
-      }
+      var iUf = pl.isArray(o) ? 
+        'arr' : 
+		    (o instanceof RegExp ? 'regexp' : (o instanceof Date ? 'date' : (o === n ? nn : types[typeof o])));
       
       return is ? iUf === is : iUf;
     },
@@ -116,9 +107,7 @@
     
     trim: function(text) { 
       // Uses native method, if it's availiable
-      return String[proto].trim ? 
-        text.trim() : 
-        text.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
+      return ''.trim ? text.trim() : text.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
     },
     
     each: function(arr, func) {
@@ -131,7 +120,7 @@
     
     inArray: function(f, arr) {
       // Native check if it's availiable
-      if(Array[proto].indexOf) return arr.indexOf(f);
+      if([].indexOf) return arr.indexOf(f);
       pl.each(arr, function(k) {
         if(f === this) {
           return k;
