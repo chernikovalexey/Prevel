@@ -17,6 +17,7 @@ __Browsers, which are supported:__
 * Opera Mini/Mobile
 * Mobile Safari
 * Firefox for Mobile
+* Android Browser
 
 ---
 
