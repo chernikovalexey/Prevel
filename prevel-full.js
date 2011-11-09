@@ -1,4 +1,4 @@
-/* Prevel Framework v1.0.8
+/* Prevel Framework v1.0.9
  * http://github.com/chernikovalexey/Prevel
  * 
  * Copyright 2011, Alexey Chernikov
@@ -112,7 +112,11 @@
     type: function(o, is) {
       var iUf = pl.isArray(o) ? 
         'arr' : 
-		    (o instanceof RegExp ? 'regexp' : (o instanceof Date ? 'date' : (o === n ? nn : types[typeof o])));
+        o instanceof RegExp ? 
+          'regexp' : 
+          (o instanceof Date ? 
+            'date' : 
+            (o === n ? nn : types[typeof o])));
       
       return is ? iUf === is : iUf;
     },
@@ -128,7 +132,9 @@
     
     trim: function(text) { 
       // Uses native method, if it's availiable
-      return ''.trim ? text.trim() : text.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
+      return ''.trim ? 
+        text.trim() : 
+        text.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
     },
     
     each: function(arr, func) {
@@ -411,7 +417,7 @@
     addClass: function(c) {
       pl.each(this.elements, function() {
         // If this class already exists
-        if(!this[cn] || ~~pl.inArray(c, this[cn].split(' '))) return;
+        if(!this[cn] || ~pl.inArray(c, this[cn].split(' '))) return;
         this[cn] += (this[cn] ? ' ' : '') + c;
       });
       return this;
@@ -419,7 +425,7 @@
     
     hasClass: function(c) {
       return this.elements[0] && this.elements[0][cn] ? 
-        ~~pl.inArray(c, this.elements[0][cn].split(' ')) : 
+        !!~pl.inArray(c, this.elements[0][cn].split(' ')) : 
         false;
     },
     
@@ -430,15 +436,11 @@
             from = pl.inArray(c, cl);
         
         // If this class does not exist
-        if(~~from) return;
+        if(!~from) return;
         
         cl.splice(from, 1);
-
-        if(pl.empty(cl)) {
-          this.removeAttribute('class');
-        } else {
-          this[cn] = cl.join(' ');
-        }
+  
+        this[cn] = (pl.empty(cl) ? cl.slice(from, 1) : cl).join(' ');
       });
       return this;
     },
@@ -769,8 +771,8 @@
         bind: function(el, evt, fn) {
           if(el.setInterval && !el.frameElement) {
             if(el !== win) el = win;
-            
-            if(~~pl.inArray(evt, unResolvedEvt)) {
+
+            if(~pl.inArray(evt, unResolvedEvt)) {
               return (window.onload = function() {
                 pl(doc.body).bind(evt, fn);
               });
