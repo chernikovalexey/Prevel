@@ -1,4 +1,4 @@
-/* Prevel Framework v1.0.9
+/* Prevel Framework v1.0.10
  * http://github.com/chernikovalexey/Prevel
  * 
  * Copyright 2011, Alexey Chernikov
@@ -116,7 +116,7 @@
           'regexp' : 
           (o instanceof Date ? 
             'date' : 
-            (o === n ? nn : types[typeof o])));
+            (o === n ? nn : types[typeof o]));
       
       return is ? iUf === is : iUf;
     },
