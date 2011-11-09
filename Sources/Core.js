@@ -91,7 +91,11 @@
     type: function(o, is) {
       var iUf = pl.isArray(o) ? 
         'arr' : 
-		    (o instanceof RegExp ? 'regexp' : (o instanceof Date ? 'date' : (o === n ? nn : types[typeof o])));
+        o instanceof RegExp ? 
+          'regexp' : 
+          (o instanceof Date ? 
+            'date' : 
+            (o === n ? nn : types[typeof o]));
       
       return is ? iUf === is : iUf;
     },
@@ -107,7 +111,9 @@
     
     trim: function(text) { 
       // Uses native method, if it's availiable
-      return ''.trim ? text.trim() : text.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
+      return ''.trim ? 
+        text.trim() : 
+        text.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
     },
     
     each: function(arr, func) {
