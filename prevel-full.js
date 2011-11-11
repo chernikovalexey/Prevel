@@ -1,4 +1,4 @@
-/* Prevel Framework v1.0.10
+/* Prevel Framework v1.0.11
  * http://github.com/chernikovalexey/Prevel
  * 
  * Copyright 2011, Alexey Chernikov
@@ -754,13 +754,13 @@
       
       function handleCommon(e) {
         e = fixEvt(e);
-                
+        
         var handlerList = this.evt[e.type];
         
         for(var key in handlerList) {
           var updated = handlerList[key].call(this, e);
           
-          if(!updated) {
+          if(updated === false) {
             e.preventDefault();
             e.stopPropagation();
           }
