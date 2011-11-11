@@ -457,7 +457,7 @@
         for(var key in handlerList) {
           var updated = handlerList[key].call(this, e);
           
-          if(!updated) {
+          if(updated === false) {
             e.preventDefault();
             e.stopPropagation();
           }
