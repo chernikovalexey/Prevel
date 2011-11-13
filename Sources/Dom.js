@@ -12,9 +12,9 @@
   // Fix attribute names because of .setAttribute
   var __this;
   var fixAttr = {
-    'className': 'class',
-    'cssFloat':  'float',
-    'htmlFor':   'for'
+    'class': 'className',
+    'float': 'cssFloat',
+    'for':   'htmlFor'
   };
   
   // Add `fn` to `pl`, at first (to reduce nested level)
@@ -78,7 +78,9 @@
     
     last: function() {
       var l = this.elements.length;
-      this.elements = [l ? this.elements[l - 1] : n];
+      this.elements = [
+        l && !pl.type(this.elements[l - 1], u) ? this.elements[l - 1] : n
+      ];
       return this;
     },
     
@@ -141,13 +143,13 @@
       });
       return this;
     },
-    
+
     attr: function(attr, set) {
       attr = fixAttr[attr] || attr;
 
       if(set) {
         pl.each(this.elements, function() {
-          this.setAttribute(attr, set);
+          this[attr] = set;
         }); 
       } else {
         switch(pl.type(attr)) {
@@ -157,7 +159,7 @@
             }
             break;
           case 'str':
-            return this.elements[0].getAttribute(attr);
+            return this.elements[0][attr];
             break;
         }
       }
@@ -168,7 +170,7 @@
       attr = fixAttr[attr] || attr;
 
       pl.each(this.elements, function() {
-        this.removeAttribute(attr);
+        this[attr] = n;
       });
       return this;
     },
@@ -451,7 +453,7 @@
       
       function handleCommon(e) {
         e = fixEvt(e);
-                
+        
         var handlerList = this.evt[e.type];
         
         for(var key in handlerList) {
