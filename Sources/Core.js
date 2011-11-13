@@ -111,6 +111,7 @@
     
     trim: function(text) { 
       // Uses native method, if it's availiable
+      text = text || '';
       return ''.trim ? 
         text.trim() : 
         text.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
@@ -124,14 +125,26 @@
       }
     },
     
-    inArray: function(f, arr) {
-      // Native check if it's availiable
-      if([].indexOf) return arr.indexOf(f);
-      pl.each(arr, function(k) {
-        if(f === this) {
-          return k;
+    // Borrowed from jQuery v1.7
+    // https://github.com/jquery/jquery/blob/master/src/core.js#L684
+    inArray: function(elem, array, i) {
+      var len;
+
+      if(array) {
+        if([].indexOf) { // Use native if possible
+          return array.indexOf(elem, i);
         }
-      });
+
+        len = array.length;
+        i = i ? i < 0 ? Math.max(0, len + i) : i : 0;
+
+        for(; i < len; ++i) {
+          if(i in array && array[i] === elem) {
+            return i;
+          }
+        }
+      }
+
       return -1;
     },
     
