@@ -1,4 +1,4 @@
-/* Prevel Framework v1.0.11
+/* Prevel Framework v1.0.12
  * http://github.com/chernikovalexey/Prevel
  * 
  * Copyright 2011, Alexey Chernikov
@@ -132,6 +132,7 @@
     
     trim: function(text) { 
       // Uses native method, if it's availiable
+      text = text || '';
       return ''.trim ? 
         text.trim() : 
         text.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
@@ -145,14 +146,26 @@
       }
     },
     
-    inArray: function(f, arr) {
-      // Native check if it's availiable
-      if([].indexOf) return arr.indexOf(f);
-      pl.each(arr, function(k) {
-        if(f === this) {
-          return k;
+    // Borrowed from jQuery v1.7
+    // https://github.com/jquery/jquery/blob/master/src/core.js#L684
+    inArray: function(elem, array, i) {
+      var len;
+
+      if(array) {
+        if([].indexOf) { // Use native if possible
+          return array.indexOf(elem, i);
         }
-      });
+
+        len = array.length;
+        i = i ? i < 0 ? Math.max(0, len + i) : i : 0;
+
+        for(; i < len; ++i) {
+          if(i in array && array[i] === elem) {
+            return i;
+          }
+        }
+      }
+
       return -1;
     },
     
@@ -206,7 +219,6 @@
   // Add `pl` to the global scope
   win.pl = pl;
 })();
-
 /* Module: Ajax.js
  * Requirements: Core.js
  * Provides: Ajax.
@@ -242,7 +254,7 @@
         }
         
         if(!Request) {
-          return alert('Could not create a XMLHttpRequest instance.');
+          return alert('Could not create an XMLHttpRequest instance.');
         }
         
         // Fix related with `attachEvent`
@@ -315,9 +327,9 @@
   // Fix attribute names because of .setAttribute
   var __this;
   var fixAttr = {
-    'className': 'class',
-    'cssFloat':  'float',
-    'htmlFor':   'for'
+    'class': 'className',
+    'float': 'cssFloat',
+    'for':   'htmlFor'
   };
   
   // Add `fn` to `pl`, at first (to reduce nested level)
@@ -381,7 +393,9 @@
     
     last: function() {
       var l = this.elements.length;
-      this.elements = [l ? this.elements[l - 1] : n];
+      this.elements = [
+        l && !pl.type(this.elements[l - 1], u) ? this.elements[l - 1] : n
+      ];
       return this;
     },
     
@@ -444,13 +458,13 @@
       });
       return this;
     },
-    
+
     attr: function(attr, set) {
       attr = fixAttr[attr] || attr;
 
       if(set) {
         pl.each(this.elements, function() {
-          this.setAttribute(attr, set);
+          this[attr] = set;
         }); 
       } else {
         switch(pl.type(attr)) {
@@ -460,7 +474,7 @@
             }
             break;
           case 'str':
-            return this.elements[0].getAttribute(attr);
+            return this.elements[0][attr];
             break;
         }
       }
@@ -471,7 +485,7 @@
       attr = fixAttr[attr] || attr;
 
       pl.each(this.elements, function() {
-        this.removeAttribute(attr);
+        this[attr] = n;
       });
       return this;
     },
