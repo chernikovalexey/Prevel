@@ -263,7 +263,8 @@ In addition, it's possible to attach not only one event listener. Example:
 
 ###pl().unbind(event, fn)
 
-Detaches event listener from all selected elements.
+Detaches event listener from all selected elements. If parameters didn't passed, it plucks all the event listeners attached 
+to selected elements. If only `event` passed, it plucks all the event listeners of `event`-event (e.g.: click-events).
 
   ```javascript
   var evtListenerFn = function() {
@@ -272,6 +273,8 @@ Detaches event listener from all selected elements.
   
   pl('a').bind('click', evtListenerFn);   // Event listener has been attached from all the links
   pl('a').unbind('click', evtListenerFn); // Event listener has been detached from all the links
+  pl('a').unbind('click');                // Detach all the click-events
+  pl('a').unbind();                       // Detach all (any) the event listeners
   ```
   
 ---
