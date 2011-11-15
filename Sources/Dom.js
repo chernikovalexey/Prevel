@@ -506,7 +506,21 @@
         },
         
         unbind: function(el, evt, fn) {
-          var handlerList = el.evt && el.evt[evt];
+          var handlerList = el.evt;
+
+          if(pl.type(fn, u)) {
+            if(!handlerList) return;
+            for(var handle in handlerList) {
+              if(pl.type(evt, u) || evt === handle) {
+                for(var key in handlerList[handle]) {
+                  Events.attaches.unbind(el, handle, handlerList[handle][key]);
+                }
+              }
+            }
+            return;
+          }
+          
+          handlerList = handlerList && handlerList[evt];
           if(!handlerList) return;
           
           delete handlerList[fn.turnID];
@@ -535,7 +549,7 @@
     })(),
         
     routeEvent: function(evt, fn, flag) {
-      if(fn) {
+      if((fn && evt) || (!fn && evt) || (!fn && !evt)) {
         if(flag) {
           pl.each(__this.elements, function() {
             Events.attaches.bind(this, evt, fn);
