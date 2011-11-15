@@ -52,6 +52,8 @@
       Child  = pl;
     }
     
+    var init = Child;
+    
     // If accessors are supported, they will be considered in extending
     if(accessors) {
       var getter, setter;
@@ -74,6 +76,11 @@
       }
     }
     
+    if(init === pl.fn) {
+      pl.implement(pl.fn.init, pl.fn);
+    }
+    
+    init = u;
     return Child;
   };
 
