@@ -478,6 +478,8 @@
             }
           }
           
+          console.log(el,evt,fn);
+          
           if(!fn.turnID) {
             fn.turnID = ++turns;
           }
@@ -549,8 +551,13 @@
     })(),
         
     routeEvent: function(evt, fn, flag) {
-      if((fn && evt) || (!fn && evt) || (!fn && !evt)) {
+      if(pl.type(evt, 'obj')) {
+        for(var key in evt) {
+          arguments.callee(key, evt[key], flag);
+        }
+      } else if((fn && evt) || (!fn && evt) || (!fn && !evt)) {
         if(flag) {
+          console.log('Right way..');
           pl.each(__this.elements, function() {
             Events.attaches.bind(this, evt, fn);
           });
@@ -559,10 +566,6 @@
             Events.attaches.unbind(this, evt, fn);
           });
         }          
-      } else {
-        for(var key in evt) {
-          arguments.callee(key, evt[key], flag);
-        }
       }
       return __this;
     }
