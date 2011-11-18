@@ -1,4 +1,4 @@
-/* Prevel Framework v1.0.16
+/* Prevel Framework v1.0.17
  * http://github.com/chernikovalexey/Prevel
  * 
  * Copyright 2011, Alexey Chernikov
@@ -800,8 +800,6 @@
             }
           }
           
-          console.log(el,evt,fn);
-          
           if(!fn.turnID) {
             fn.turnID = ++turns;
           }
@@ -879,7 +877,6 @@
         }
       } else if((fn && evt) || (!fn && evt) || (!fn && !evt)) {
         if(flag) {
-          console.log('Right way..');
           pl.each(__this.elements, function() {
             Events.attaches.bind(this, evt, fn);
           });
