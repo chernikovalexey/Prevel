@@ -9,12 +9,19 @@
 
 (function() {
   pl.extend({
+    // Convert object to a 'param-string'
+    toParams: function(o) {
+      var pieces = [];
+      for(var key in o) {
+        pieces.push(
+          encodeURIComponent(key) + '=' + encodeURIComponent(o[key])
+        );
+      }
+      return pieces.join('&');
+    },
+    
     ajax: function(params) {
-      var Request,
-          load    = params.load || ef,
-          error   = params.error || ef,
-          success = params.success || ef;
-            
+      var Request;
       var requestPrepare = function() {
         if(win.XMLHttpRequest) { // Modern browsers
           Request = new XMLHttpRequest();
@@ -33,25 +40,23 @@
         }
         
         if(!Request) {
-          return alert('Could not create an XMLHttpRequest instance.');
+          pl.error('Could not create an XMLHttpRequest instance.');
         }
         
         // Fix related with `attachEvent`
         Request.onreadystatechange = function(e) {
-          switch(Request.readyState) {
-            case 1: load();
-              break;
-            case 4:
-              if(Request.status === 200) {
-                success(
-                  params.dataType === 'json' ? // Parse JSON if necessary
-                    pl.JSON(Request.responseText) : 
-                    Request.responseText
-                );
-              } else {
-                error(Request.status);
-              }
-              break;
+          if(Request.readyState === 1) {
+            (params.load || ef)();
+          } else if(Request.readyState === 4) {
+            if(Request.status === 200) {
+              (params.success || ef)(
+                params.dataType === 'json' ? // Parse JSON if necessary
+                  pl.JSON(Request.responseText) : 
+                  Request.responseText
+              );
+            } else {
+              (params.success || ef)(Request.status);
+            }
           }
         };
       };
@@ -70,23 +75,18 @@
         }
       };
       
-      params.type  = params.type || 'POST';
       params.data  = pl.toParams(params.data || {});
       params.async = params.async || true;
-      
       requestPrepare();
       
-      switch(params.type) {
-        case 'POST':
-          Request.open('POST', params.url, params.async);
-          headers(1);
-          Request.send(params.data);
-          break;
-        case 'GET':
-          Request.open('GET', params.url + '?' + params.data, params.async);
-          headers();
-          Request.send(n);
-          break;
+      if(params.type === 'POST') {
+        Request.open('POST', params.url, params.async);
+        headers(1);
+        Request.send(params.data);
+      } else {
+        Request.open('GET', params.url + '?' + params.data, params.async);
+        headers();
+        Request.send(n);
       }
     }
   });
