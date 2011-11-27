@@ -21,32 +21,38 @@
   
   // Short names for almost all the types
   var types = {
-    'function':  'fn',
-    'object':    'obj',
-    'number':    'int',
-    'string':    'str',
-    'boolean':   'bool',
-    'undefined': u
+    'function': 'fn',
+    object: 'obj',
+    number: 'int',
+    string: 'str',
+    'boolean': 'bool',
+    regexp: 'regexp',
+    date: 'date',
+    undefined: u,
+    array: 'arr'
   };
   
-  // Cached check if accessors are availiable
+  var op = Object[proto];
+  
+  // Cached checks
   var accessors = 
-    !!Object[proto].__lookupGetter__ && 
-    !!Object[proto].__lookupSetter__ &&
-    !!Object[proto].__defineGetter__ &&
-    !!Object[proto].__defineSetter;
+    !!op.__lookupGetter__ && 
+    !!op.__lookupSetter__ &&
+    !!op.__defineGetter__;
 
+  var trim     = !!''.trim,
+      indexOf  = !![].indexOf,
+      toString = op.toString,
+      json     = win.JSON && win.JSON.parse;
+    
   // Local copy of `pl`
   var pl = (function() {
     return function(o, context, index) {
       return pl.fn ? new pl.fn.init(o, context, index) : uf;
     };
   })(); 
-  
-  // User agent
-  var ua = win.navigator.userAgent.toLowerCase();
-  
-  pl.extend = function(Child, Parent) {
+
+  pl.extend = function(Child, Parent, flag) {
     if(!Parent) {
       Parent = Child;
       Child  = pl;
@@ -60,17 +66,18 @@
       for(var key in Parent) {
         getter = Parent.__lookupGetter__(key);
         setter = Parent.__lookupSetter__(key);
-        
+
         if(getter || setter) {
           if(getter) Child.__defineGetter__(key, getter);
           if(setter) Child.__defineSetter__(key, setter);
-        } else if(!Child[key]) { // Do not reassign (*)
+        } else if((!Child[key]) || (Child[key] && flag)) {
           Child[key] = Parent[key];
         }
       }
     } else {
       for(var key in Parent) {
-        if(!Child[key]) { // *
+        // It can reassign the parameter if flag equals true
+        if((!Child[key]) || (Child[key] && flag)) {
           Child[key] = Parent[key];
         }
       }
@@ -84,27 +91,46 @@
     return Child;
   };
 
+  // User agent
+  var ua = win.navigator.userAgent.toLowerCase();
+  
+  var opera  = /opera/i.test(ua),
+      chrome = /chrome/i.test(ua);
+  var browsers = {
+      opera: opera,
+      ie: !opera && /msie/i.test(ua),
+      ie6: !opera && /msie 6/i.test(ua),
+      ie7: !opera && /msie 7/i.test(ua),
+      ie8: !opera && /msie 8/i.test(ua),
+      firefox: /firefox/i.test(ua),
+      chrome: chrome,
+      safari_khtml: !chrome && /khtml/i.test(ua),
+      safari: !chrome && /webkit|safari/i.test(ua)
+  };
+
+  for(var key in browsers) {
+    if(browsers[key]) {
+      pl.extend({navigator: key});
+    }
+  }
+  
+  // Public
   pl.extend({
     // Extend the Object.prototype
-    implement: function(Child, Parent) {
-      return pl.extend(Child[proto], Parent);
+    implement: function(Child, Parent, flag) {
+      return pl.extend(Child[proto], Parent, flag);
     },
     
-    // Uses native method, if it's availiable
+    // Uses native method, if it's available
     isArray: Array.isArray || function(o) {
-      return Object[proto].toString.call(o) === '[object Array]';
+      return pl.type(o, 'arr');
     },
     
     type: function(o, is) {
-      var iUf = pl.isArray(o) ? 
-        'arr' : 
-        o instanceof RegExp ? 
-          'regexp' : 
-          (o instanceof Date ? 
-            'date' : 
-            (o === n ? nn : types[typeof o]));
-      
-      return is ? iUf === is : iUf;
+      var t = o === n ? 
+        nn : 
+        o === uf ? u : (class2type[toString.call(o)] || 'obj');
+      return is ? is === t : t;
     },
         
     empty: function(o) {
@@ -119,9 +145,7 @@
     trim: function(text) { 
       // Uses native method, if it's availiable
       text = text || '';
-      return ''.trim ? 
-        text.trim() : 
-        text.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
+      return trim ? text.trim() : text.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
     },
     
     each: function(arr, func) {
@@ -132,45 +156,20 @@
       }
     },
     
-    // Borrowed from jQuery v1.7
-    // https://github.com/jquery/jquery/blob/master/src/core.js#L684
-    inArray: function(elem, array, i) {
-      var len;
-
-      if(array) {
-        if([].indexOf) { // Use native if possible
-          return array.indexOf(elem, i);
-        }
-
-        len = array.length;
-        i = i ? i < 0 ? Math.max(0, len + i) : i : 0;
-
-        for(; i < len; ++i) {
-          if(i in array && array[i] === elem) {
-            return i;
-          }
-        }
-      }
-
-      return -1;
+    inArray: function(a, c, b, r){
+      if(indexOf) return c.indexOf(a, b);
+      for(b = b > 0 || -1, r = -1; ++b < c.length && !~r; r = c[b] === a ? b : r);
+      return r;
     },
     
-    // Convert object to a 'param-string'
-    toParams: function(o) {
-      if(!pl.type(o, 'obj')) return o;
-      
-      var pieces = [];
-      for(var key in o) {
-        pieces.push(
-          encodeURIComponent(key) + '=' + encodeURIComponent(o[key])
-        );
-      }
-      return pieces.join('&');
+    error: function(msg) {
+      throw new Error(msg);
+      return false;
     },
-    
+
     JSON: function(data) {
       // Use native function if possible
-      return win.JSON && win.JSON.parse ? 
+      return json ? 
         win.JSON.parse(data) :
         (!(/[^,:{}[]0-9.-+Eaeflnr-u nrt]/.test(
           data.replace(/"(.|[^"])*"/g, ''))) && eval('(' + data + ')')
@@ -178,30 +177,15 @@
     },
     
     browser: function(name) {
-      var isOpera  = /opera/i.test(ua),
-          isChrome = /chrome/i.test(ua);
-      var browser = {
-        opera: isOpera,
-        ie: !isOpera && /msie/i.test(ua),
-        ie6: !isOpera && /msie 6/i.test(ua),
-        ie7: !isOpera && /msie 7/i.test(ua),
-        ie8: !isOpera && /msie 8/i.test(ua),
-        firefox: /firefox/i.test(ua),
-        chrome: isChrome,
-        
-        // Old Safari version
-        safari_khtml: !isChrome && /khtml/i.test(ua),
-        safari: !isChrome && /webkit|safari/i.test(ua)
-      };
-
-      for(var key in browser) {
-        if(browser[key]) {
-          return name ? name === key : key;
-        }
-      }
+      return name ? name === pl.navigator : pl.navigator;
     }
   });
 
+  var class2type = {};
+  pl.each('Array Boolean Number String Function Date RegExp Object'.split(' '), function(key, val) {
+    class2type['[object ' + val + ']'] = types[val.toLowerCase()];
+  });
+  
   // Add `pl` to the global scope
   win.pl = pl;
 })();
