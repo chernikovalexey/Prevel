@@ -1,4 +1,4 @@
-/* Prevel Framework v1.1.0
+/* Prevel Framework v1.1.1
  * http://github.com/chernikovalexey/Prevel
  * 
  * Copyright 2011, Alexey Chernikov
@@ -118,15 +118,15 @@
   var opera  = /opera/i.test(ua),
       chrome = /chrome/i.test(ua);
   var browsers = {
-    opera: opera,
-    ie: !opera && /msie/i.test(ua),
-    ie6: !opera && /msie 6/i.test(ua),
-    ie7: !opera && /msie 7/i.test(ua),
-    ie8: !opera && /msie 8/i.test(ua),
-    firefox: /firefox/i.test(ua),
-    chrome: chrome,
-    safari_khtml: !chrome && /khtml/i.test(ua),
-    safari: !chrome && /webkit|safari/i.test(ua)
+      opera: opera,
+      ie: !opera && /msie/i.test(ua),
+      ie6: !opera && /msie 6/i.test(ua),
+      ie7: !opera && /msie 7/i.test(ua),
+      ie8: !opera && /msie 8/i.test(ua),
+      firefox: /firefox/i.test(ua),
+      chrome: chrome,
+      safari_khtml: !chrome && /khtml/i.test(ua),
+      safari: !chrome && /webkit|safari/i.test(ua)
   };
 
   for(var key in browsers) {
@@ -178,7 +178,7 @@
     },
     
     inArray: function(a, c, b, r){
-      //if(indexOf) return c.indexOf(a, b);
+      if(indexOf) return c.indexOf(a, b);
       for(b = b > 0 || -1, r = -1; ++b < c.length && !~r; r = c[b] === a ? b : r);
       return r;
     },
@@ -543,7 +543,7 @@
             });
           }          
         }
-        return __this;
+        return pl.__self__;
       }
     },
     
