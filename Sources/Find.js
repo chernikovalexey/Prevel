@@ -1,6 +1,6 @@
 /* Module: Find.js
  * Requirements: Core.js
- * Provides: CSS3 queries.
+ * Provides: CSS queries support.
  * 
  * Contains YASS v0.3.9
  * http://yass.webo.in
