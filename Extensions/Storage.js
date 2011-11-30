@@ -9,7 +9,11 @@
  *  - Working with SessionStorage
  *  - Working with complex Prevel Storage (ls + ss + cookies)
  *  
- *  TODO: IndexedDB support
+ * Dual licensed under the:
+ *  - GNU LGPL (http://opensource.org/licenses/lgpl-license.php)
+ *  - MIT License (http://opensource.org/licenses/mit-license.php)
+ *
+ * TODO: IndexedDB support
 **/
 
 (function(win, doc, undefined) {
