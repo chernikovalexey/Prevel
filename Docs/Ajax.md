@@ -2,6 +2,17 @@
 
 ---
 
+###pl.toParams(Object)
+Makes a param-string from the `Object`.
+
+__Example:__
+
+```javascript
+alert( pl.toParams({ name: 'Roger', age: 45 }) ); // name=Roger&age=45
+```
+
+---
+
 ###pl.ajax(params)
 
 Creates an Ajax-request.
