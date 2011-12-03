@@ -20,12 +20,7 @@
       slice = Array[proto].slice,
       stringify = win.JSON && win.JSON.stringify;
   
-  pl.extend({
-    // With arrays and objects
-    toArray: function(arrayLikeObject) {
-      return slice.call(arrayLikeObject, 0);
-    },
-    
+  pl.extend({    
     map: function(array, fn) {
       var output = [];
       pl.each(array, function(k) {
