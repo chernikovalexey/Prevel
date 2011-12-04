@@ -4,7 +4,7 @@
 
 ###pl.find(selector, root)
 
-Prevel uses YASS v0.3.9 as CSS query selector, because of it's lightweight and speed.
+Prevel uses YASS v0.3.9 as CSS query selector because of it's lightweight and speed.
 
 __Supported queries:__
 
