@@ -4,15 +4,11 @@
  * Requirements: Core.js
  * Provides:
  *  - Support of a couple methods designated on working with arrays from
- *    the ECMAScript-5 (map, filter, every, some)
+ *    the ECMAScript-5 (map, filter, every and so on)
  *  - A possibility to stringify an object
  *  - Checking if given object is `window`
  *  - Attaching scripts and styles
  *  - Assigning `this` to any of functions
- *
- * Dual licensed under the:
- *  - GNU LGPL (http://opensource.org/licenses/lgpl-license.php)
- *  - MIT License (http://opensource.org/licenses/mit-license.php)
 **/
 
 (function(win, doc, undefined) {
@@ -90,11 +86,16 @@
           type: params.type || 'text/javascript'
         }, params.charset ? {charset: params.charset} : {})).get();
         
+        var _load = params.load;
+        params.load = function() {
+          _load(params.url, +new Date());
+        };
+        
         // attachEvent doesn't support adding events to objects, so
         // it's not possible to use `pl.events.attaches.bind`
         add.onreadystatechange = function(e) {        
           if(e.readyState === 'complete') {
-            params.load(params.url, +new Date());
+            params.load();
           }
         };        
         add.onload = params.load;
