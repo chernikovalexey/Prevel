@@ -1,13 +1,13 @@
 ###Prevel Framework
 
-It's a lightweight (approximately 4.8 Kb) JavaScript library with strong functionality. 
+It's a lightweight (approximately 5 Kb) JavaScript library with strong functionality. 
 All the methods which can be useful in all kinds of development are attending in 
 Prevel (such as interaction with DOM, Ajax, some of common methods). 
 If something is missed, you always can write your module using `pl.extend` method. 
 Furthermore, it's completely cross-browser and oriented not only on modern browsers. 
 
 ---
-__Browsers, which are supported:__
+__Supported browsers:__
 
 * Internet Explorer 6+
 * Opera 9.0+
@@ -26,6 +26,8 @@ __Documentation__: [Docs](/chernikovalexey/Prevel/tree/master/Docs)
 __Full version__ for developers: [Prevel-full.js](/chernikovalexey/Prevel/blob/master/prevel-full.js)
 
 __Minified version__ for production: [Prevel-min.js](/chernikovalexey/Prevel/blob/master/prevel-min.js)
+
+__Extensions__ if the basic functionality seems meager to you: [Extensions](/chernikovalexey/Prevel/blob/master/Extensions)
 
 ---
 
