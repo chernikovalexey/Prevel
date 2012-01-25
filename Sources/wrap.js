@@ -23,4 +23,4 @@
 
 })(this, document, 'prototype', 'addEventListener', 
    'getElement', 'className', 'null', 'undef', 
-   '<([A-z]+)>', null, function() {});
+   '<([A-z]+[1-6]*)>', null, function() {});
