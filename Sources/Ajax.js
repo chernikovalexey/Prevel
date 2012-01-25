@@ -55,7 +55,7 @@
                   Request.responseText
               );
             } else {
-              (params.success || ef)(Request.status);
+              (params.error || ef)(Request.status,Request.responseText);
             }
           }
         };
