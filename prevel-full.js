@@ -1,4 +1,4 @@
-/* Prevel Framework v1.1.1
+/* Prevel Framework v1.1.2
  * http://github.com/chernikovalexey/Prevel
  * 
  * Copyright 2011, Alexey Chernikov
@@ -268,7 +268,7 @@
                   Request.responseText
               );
             } else {
-              (params.success || ef)(Request.status);
+              (params.error || ef)(Request.status,Request.responseText);
             }
           }
         };
@@ -1438,4 +1438,4 @@
 
 })(this, document, 'prototype', 'addEventListener', 
    'getElement', 'className', 'null', 'undef', 
-   '<([A-z]+)>', null, function() {});
+   '<([A-z]+[1-6]*)>', null, function() {});
