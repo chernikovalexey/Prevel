@@ -14,7 +14,7 @@ __Example of attaching:__
 
 Where __prevel-ext-core.js__ is file contains [this code](https://github.com/chernikovalexey/Prevel/blob/master/Extensions/Core.js).
 
-Benefits of using more 4.3 Kb (uncompressed) a below...
+Benefits of using more 4.3 Kb (uncompressed) are below...
 
 ###pl.map(array, function)
 
