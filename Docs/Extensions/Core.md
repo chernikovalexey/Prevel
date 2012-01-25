@@ -135,7 +135,7 @@ Attaches a script or style file (it will be detected automatically by the file's
 * `charset` - (only for scripts) charset of script
 * `callback` - function which will be fired when file loaded
 
-__Examples:___
+__Examples:__
 
 ```javascript
 // Attach a new script
