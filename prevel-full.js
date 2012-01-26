@@ -1,4 +1,4 @@
-/* Prevel Framework v1.1.3
+/* Prevel Framework v1.1.4
  * http://github.com/chernikovalexey/Prevel
  * 
  * Copyright 2011-2012, Alexey Chernikov
@@ -760,7 +760,7 @@
     addClass: function(c) {
       pl.each(this.elements, function() {
         // If this class already exists
-        if(!this[cn] || ~pl.inArray(c, this[cn].split(' '))) return;
+        if(~pl.inArray(c, this[cn].split(' '))) return;
         this[cn] += (this[cn] ? ' ' : '') + c;
       });
       return this;
