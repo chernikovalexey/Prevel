@@ -40,7 +40,7 @@
         }
         
         if(!Request) {
-          pl.error('Could not create an XMLHttpRequest instance.');
+          pl.error('Could not create a XMLHttpRequest instance.');
         }
         
         // Fix related with `attachEvent`
