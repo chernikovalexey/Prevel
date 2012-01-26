@@ -452,7 +452,7 @@
     addClass: function(c) {
       pl.each(this.elements, function() {
         // If this class already exists
-        if(!this[cn] || ~pl.inArray(c, this[cn].split(' '))) return;
+        if(~pl.inArray(c, this[cn].split(' '))) return;
         this[cn] += (this[cn] ? ' ' : '') + c;
       });
       return this;
