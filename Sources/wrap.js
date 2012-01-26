@@ -1,7 +1,7 @@
 /* Prevel Framework v%version%
  * http://github.com/chernikovalexey/Prevel
  * 
- * Copyright 2011, Alexey Chernikov
+ * Copyright 2011-2012, Alexey Chernikov
  * Dual licensed under the:
  *  - GNU LGPL (http://opensource.org/licenses/lgpl-license.php)
  *  - MIT License (http://opensource.org/licenses/mit-license.php)

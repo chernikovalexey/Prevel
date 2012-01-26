@@ -310,7 +310,9 @@
     
     clean: function(a) {
       var r = [];
-      for(var i = 0; i < a.length; ++i) {
+      var len = a.length;
+      
+      for(var i = 0; i < len; ++i) {
         if(pl.type(a[i], 'str')) {         
           var table = '';
     
@@ -330,19 +332,19 @@
     
           if(table) {
             div = div.firstChild;
-            if(table != 'thead') div = div.firstChild;
-            if(table == 'td') div = div.firstChild;
+            if(table !== 'thead') div = div.firstChild;
+            if(table === 'td') div = div.firstChild;
           }
 
-          for(var j = 0; j < div.childNodes.length; ++j) 
+          var cn_len = div.childNodes.length;
+          for(var j = 0; j < cn_len; ++j) {
             r.push(div.childNodes[j]);
-        } else if(a[i].pl || a[i].length && !a[i].nodeType) {
-          for(var k = 0; k < a[i].length; ++k) 
-            r.push(a[i][k]);
+          }
         } else if(a[i] !== n) {
-          r.push(a[i].nodeType ? a[i] : document.createTextNode(a[i].toString()));
+          r.push(a[i].nodeType ? a[i] : doc.createTextNode(a[i].toString()));
         }
       }
+      
       return r;
     },
     
