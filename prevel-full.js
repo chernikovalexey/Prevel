@@ -1,4 +1,4 @@
-/* Prevel Framework v1.1.6
+/* Prevel Framework v1.1.7
  * http://github.com/chernikovalexey/Prevel
  * 
  * Copyright 2011-2012, Alexey Chernikov
@@ -556,21 +556,13 @@
 
         if(pl.type(ins, u)) {
           return e[method];
-        } else if(pl.type(ins, 'obj')) {
-          pl.each(init.elements, function() {
-            pl.innerContent.edge(this, [ins], true, 1, function(o, a) {
-              console.log(a);
-              if(!to) {
-                o.innerHTML = '';
-                o.appendChild(a);
-              } else if(~to) {
-                o.insertBefore(a, o.lastChild.nextSibling);
-              } else {
-                o.insertBefore(a, o.firstChild);
-              }
-            });
-          });
         } else {
+          if(pl.type(ins, 'obj')) {
+            var temp = doc.createElement('div');
+            temp.appendChild(ins);
+            ins = temp.innerHTML;
+          }
+          
           pl.each(init.elements, function() {
             if(!to) {
               this[method] = ins;
