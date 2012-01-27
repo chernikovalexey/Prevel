@@ -554,21 +554,20 @@
     
     show: function() {
       pl.each(this.elements, function() {
-        if(pl(this).css('display') !== 'none') return;           
-        pl(this).css('display', this.getAttribute('plrd') || '');
+        this.style.display = this.plrd ? this.plrd : '';
+        if(pl.curCSS.get(this, 'display') === 'none') {
+          this.style.display = 'block';
+        }
       });
-
       return this;
     },
     
     hide: function() {
       pl.each(this.elements, function() {
-        var display = pl(this).css('display');
-        
-        if(display === 'none') return;
-        
-        // 'Real-display' vault
-        this.setAttribute('plrd', display);
+        this.plrd = this.plrd || pl.curCSS.get(this, 'display');
+        if(this.plrd === 'none') {
+          this.plrd = 'block';
+        }
         this.style.display = 'none';
       });
       return this;
