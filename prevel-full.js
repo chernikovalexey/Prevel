@@ -1,4 +1,4 @@
-/* Prevel Framework v1.1.4
+/* Prevel Framework v1.1.6
  * http://github.com/chernikovalexey/Prevel
  * 
  * Copyright 2011-2012, Alexey Chernikov
@@ -171,8 +171,9 @@
     },
     
     each: function(arr, func) {
-      var key = arr.length;
-      while(--key > -1) {
+      var key = -1;
+      var len = arr.length;
+      while(++key < len) {
         // `this` ought to contains the current value
         func.call(arr[key], key, arr[key]);
       }
@@ -555,18 +556,30 @@
 
         if(pl.type(ins, u)) {
           return e[method];
-        } else {
-          if(!to) {
-            e[method] = ins;
-          } else {
-            pl.each(init.elements, function() {
-              if(~to) {
-                this[method] += ins;
-               } else {
-                this[method] = ins + this[method];
+        } else if(pl.type(ins, 'obj')) {
+          pl.each(init.elements, function() {
+            pl.innerContent.edge(this, [ins], true, 1, function(o, a) {
+              console.log(a);
+              if(!to) {
+                o.innerHTML = '';
+                o.appendChild(a);
+              } else if(~to) {
+                o.insertBefore(a, o.lastChild.nextSibling);
+              } else {
+                o.insertBefore(a, o.firstChild);
               }
             });
-          }
+          });
+        } else {
+          pl.each(init.elements, function() {
+            if(!to) {
+              this[method] = ins;
+            } else if(~to) {
+              this[method] += ins;
+            } else {
+              this[method] = ins + this[method];
+            }
+          });
           return init;
         }
       },
@@ -897,7 +910,7 @@
       });
       return this;
     },
-    
+        
     append: function() {
       var args = arguments;
       pl.each(this.elements, function() {
