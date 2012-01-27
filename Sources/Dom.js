@@ -590,6 +590,17 @@
       return this;
     },
     
+    replace: function() {
+      var args = arguments;
+      pl.each(this.elements, function() {
+        pl.innerContent.edge(this, args, true, 1, function(o, a) {
+          o.innerHTML='';
+          o.appendChild(a);
+        });
+      });
+      return this;
+    },
+
     append: function() {
       var args = arguments;
       pl.each(this.elements, function() {
