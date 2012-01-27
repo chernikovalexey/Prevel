@@ -248,17 +248,21 @@
         if(pl.type(ins, u)) {
           return e[method];
         } else {
-          if(!to) {
-            e[method] = ins;
-          } else {
-            pl.each(init.elements, function() {
-              if(~to) {
-                this[method] += ins;
-               } else {
-                this[method] = ins + this[method];
-              }
-            });
+          if(pl.type(ins, 'obj')) {
+            var temp = doc.createElement('div');
+            temp.appendChild(ins);
+            ins = temp.innerHTML;
           }
+          
+          pl.each(init.elements, function() {
+            if(!to) {
+              this[method] = ins;
+            } else if(~to) {
+              this[method] += ins;
+            } else {
+              this[method] = ins + this[method];
+            }
+          });
           return init;
         }
       },
@@ -589,18 +593,7 @@
       });
       return this;
     },
-    
-    replace: function() {
-      var args = arguments;
-      pl.each(this.elements, function() {
-        pl.innerContent.edge(this, args, true, 1, function(o, a) {
-          o.innerHTML='';
-          o.appendChild(a);
-        });
-      });
-      return this;
-    },
-
+        
     append: function() {
       var args = arguments;
       pl.each(this.elements, function() {
