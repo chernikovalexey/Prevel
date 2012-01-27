@@ -14,7 +14,7 @@ __Example of attaching:__
 
 Where __prevel-ext-core.js__ is file contains [this code](https://github.com/chernikovalexey/Prevel/blob/master/Extensions/Core.js).
 
-Benefits of using more 4.3 Kb (uncompressed) a below...
+Benefits of using more 4.3 Kb (uncompressed) are below...
 
 ###pl.map(array, function)
 
@@ -135,7 +135,7 @@ Attaches a script or style file (it will be detected automatically by the file's
 * `charset` - (only for scripts) charset of script
 * `callback` - function which will be fired when file loaded
 
-__Examples:___
+__Examples:__
 
 ```javascript
 // Attach a new script

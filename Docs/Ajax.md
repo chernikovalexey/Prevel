@@ -60,8 +60,8 @@ __Examples of usage:__
     success: function(json) {
       alert('Ajax request was completely successfull!');
     },
-    error: function(errorNum) {
-      alert('Error #' + errorNum);
+    error: function(errorNum, errorText) {
+      alert('Error #' + errorNum + ': ' + errorText);
     }
   });
   

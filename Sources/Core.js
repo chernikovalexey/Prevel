@@ -108,9 +108,10 @@
       safari: !chrome && /webkit|safari/i.test(ua)
   };
 
+  pl.extend({navigator: []});
   for(var key in browsers) {
     if(browsers[key]) {
-      pl.extend({navigator: key});
+      pl.navigator.push(key);
     }
   }
   
@@ -177,7 +178,7 @@
     },
     
     browser: function(name) {
-      return name ? name === pl.navigator : pl.navigator;
+      return name ? !!~pl.inArray(name, pl.navigator) : pl.navigator[0];
     }
   });
 

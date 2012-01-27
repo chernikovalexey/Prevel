@@ -40,7 +40,7 @@
         }
         
         if(!Request) {
-          pl.error('Could not create an XMLHttpRequest instance.');
+          pl.error('Could not create a XMLHttpRequest instance.');
         }
         
         // Fix related with `attachEvent`
@@ -55,7 +55,7 @@
                   Request.responseText
               );
             } else {
-              (params.error || ef)(Request.status,Request.responseText);
+              (params.error || ef)(Request.status, Request.responseText);
             }
           }
         };
