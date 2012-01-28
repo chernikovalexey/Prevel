@@ -40,7 +40,22 @@
       params.data.action = 'delete';
       pl.post(params);
     },
-        
+    
+    // Adding and removing
+    ajaxDefaults: function(params) {
+      pl.each(['ajax', 'get', 'post', 'put', 'del'], function(k, val) {
+        if(params === 'remove') {
+          pl[val] = pl['_' + val];
+          pl['_' + val] = undefined;
+        } else {
+          pl['_' + val] = pl[val];
+          pl[val] = function(p) {
+            pl['_' + val](params);
+          };
+        }
+      });
+    },
+    
     serialize: function(form) {
       var o = {};
       pl('form#' + form + ' input, form#' + form + ' textarea').each(function() {
