@@ -19,9 +19,9 @@
       
       pl.each(this.elements, function() {
         if(this.className.match(cre)) {
-          this.className = this.className.replace(cre, '');
+          pl(this).removeClass(c);
         } else {
-          this.className = this.className + ' ' + c;
+          pl(this).addClass(c);
         }
       });
       return this;
@@ -42,7 +42,7 @@
     },
     
     empty: function() {
-      return pl(this.elements).html(' ');
+      return pl(this.elements).html('');
     },
     
     tag: function(is) {
