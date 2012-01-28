@@ -40,17 +40,7 @@
       params.data.action = 'delete';
       pl.post(params);
     },
-    
-    getAjax: function(params) {
-      this.params = params;
-      var that = this;
-      pl.each(['get', 'post', 'put', 'del'], function(i, action) {
-        that[action] = function(params) {
-          pl[action](pl.extend(params, that.params));
-        };
-      });
-    },
-    
+        
     serialize: function(form) {
       var o = {};
       pl('form#' + form + ' input, form#' + form + ' textarea').each(function() {
