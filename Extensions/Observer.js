@@ -27,6 +27,10 @@
       }
     },
     Ajax:function(url,data,callbacks,dataType){
+      if(pl.type(url,'obj')) {
+        var params=url;
+        var url=params.url, data=params.data,callbacks=params.callbacks,dataType=params.DataType;
+      }
       this.url=url;
       this.data=data;
       this.dataType=dataType||'json';
