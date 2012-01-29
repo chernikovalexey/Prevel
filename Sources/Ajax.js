@@ -58,6 +58,14 @@
               (params.error || ef)(Request.status, Request.responseText);
             }
           }
+          
+          params.always = params.always || ef;
+          
+          try {
+            params.always(Request.readyState, Request.status, Request.responseText);
+          } catch(e) {
+            params.always(Request.readyState);
+          }
         };
       };
       
