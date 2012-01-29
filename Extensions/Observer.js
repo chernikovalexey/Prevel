@@ -36,7 +36,7 @@
       this.dataType=dataType||'json';
       var callbacks=callbacks||[];
       var that=this;
-      pl.each(['load','success','error'],function(i,evt){
+      pl.each(['load','success','error','always'],function(i,evt){
         var cb=callbacks[evt];
         that[evt+'_observer']=new pl.Observer(cb ? (cb.length ? cb : [cb]) : []); 
         that[evt]=function() {
