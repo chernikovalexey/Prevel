@@ -62,9 +62,9 @@
           params.always = params.always || ef;
           
           try {
-            params.always(Request.readyState);
-          } catch(e) {
             params.always(Request.readyState, Request.status, Request.responseText);
+          } catch(e) {
+            params.always(Request.readyState);
           }
         };
       };
