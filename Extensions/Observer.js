@@ -45,13 +45,15 @@
       });
       pl.each(['get','post','put','delete'],function(i,type){
         that[type]=function(params){
-          if(type=='put' || type=='delete') {
+          if (type!='get'){
             params=params || {};
             params.type='POST';
-            if (params.data) {
-              params.data['_method']=type;
-            } else {
-              params.data=pl.extend({'_method':type}, (that.data || {}))
+            if(type=='put' || type=='delete') {
+              if (params.data) {
+                params.data['_method']=type;
+              } else {
+                params.data=pl.extend({'_method':type}, (that.data || {}))
+              }
             }
           }
           pl.ajax(pl.extend(params || {},that));
@@ -59,5 +61,4 @@
       });
     }
   });
-
 })();
