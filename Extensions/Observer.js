@@ -25,6 +25,35 @@
           this.apply(that,args);
         });
       }
+    },
+    Ajax:function(url,data,callbacks,dataType){
+      this.url=url;
+      this.data=data;
+      this.dataType=dataType||'json';
+      var callbacks=callbacks||[];
+      var that=this;
+      pl.each(['load','success','error'],function(i,evt){
+        var cb=callbacks[evt];
+        that[evt+'_observer']=new pl.Observer(cb ? (cb.length ? cb : [cb]) : []); 
+        that[evt]=function() {
+          that[evt+'_observer'].publish(this);
+        };
+      });
+      pl.each(['get','post','put','delete'],function(i,type){
+        that[type]=function(params){
+          if(type=='put' || type=='delete') {
+            params=params || {};
+            params.type='POST';
+            if (params.data) {
+              params.data['_method']=type;
+            } else {
+              params.data=pl.extend({'_method':type}, (that.data || {}))
+            }
+          }
+          pl.ajax(pl.extend(params || {},that));
+        };
+      });
     }
   });
+
 })();
