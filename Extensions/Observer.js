@@ -40,7 +40,7 @@
         var cb=callbacks[evt];
         that[evt+'_observer']=new pl.Observer(cb ? (cb.length ? cb : [cb]) : []); 
         that[evt]=function() {
-          that[evt+'_observer'].publish(this);
+          that[evt+'_observer'].publish(this,arguments);
         };
       });
       pl.each(['get','post','put','delete'],function(i,type){
