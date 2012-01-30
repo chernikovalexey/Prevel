@@ -28,7 +28,7 @@
     filter: function(array, reservation) {
       var output = [],
           key    = -1;
-      pl.each(array.reverse(), function(k, val) {
+      pl.each(array, function(k, val) {
         if(reservation(val)) {
           output[++key] = val;
         }
