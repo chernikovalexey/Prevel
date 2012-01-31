@@ -163,6 +163,21 @@
         }
         return (arr ? '[' : '{') + String(json) + (arr ? ']' : '}');
       }
+    },
+
+    getCallbacks: function(fn){
+      that=this;
+      var cb={};
+      if (pl.type(fn,'fn')) {
+        cb=function() {
+          fn.apply(that,arguments);
+        }
+      } else {
+        for (i in fn) {
+          cb[i]=pl.getCallbacks.call(that,fn[i]);
+        }
+      }
+      return cb;
     }
   });
   

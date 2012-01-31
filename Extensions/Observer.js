@@ -6,7 +6,7 @@
  *  - GNU LGPL (http://opensource.org/licenses/lgpl-license.php)
  *  - MIT License (http://opensource.org/licenses/mit-license.php)
 **/
-(function() {
+(function(win) {
   pl.extend({
     Observer: function(fns) {
       this.fns=fns ? (fns.call ? [fns] : fns) : [];
@@ -34,15 +34,13 @@
       this.url=url;
       this.data=data;
       this.dataType=dataType||'json';
-      var callbacks=callbacks||[];
       var that=this;
-      pl.each(['load','success','error','always'],function(i,evt){
-        var cb=callbacks[evt];
-        that[evt+'_observer']=new pl.Observer(cb ? (cb.length ? cb : [cb]) : []); 
-        that[evt]=function() {
-          that[evt+'_observer'].publish(this,arguments);
-        };
-      });
+      if (callbacks) {
+        pl.each(['load','success','error','always'],function(i,evt){
+          var cb=callbacks[evt];
+          that[evt+'_observer']=new pl.Observer(cb ? (cb.length ? cb : [cb]) : []); 
+        });
+      }
       pl.each(['get','post','put','delete'],function(i,type){
         that[type]=function(params){
           if (type!='get'){
@@ -59,6 +57,27 @@
           pl.ajax(pl.extend(params || {},that));
         };
       });
+    },
+    win_bind:function(selector,evt,fn){
+      win.addEventListener(evt, function(e){
+        elems=pl(selector).get()
+        if (elems==e.target || pl.filter(elems, function(el){return el==e.target}).length > 0){
+          fn.call(e.target,e);
+        }
+      });
+    },
+    a_ajax:function(){
+    },
+    form_ajax:function(){
     }
   });
-})();
+  pl.each(['load','success','error','always'],function(i,evt){
+    pl.Ajax.prototype[evt]=function(){
+      this[evt+'_observer'].publish(this,arguments)
+    }
+  });
+/*  pl.each(['get','post','put','delete'],function(i,type){
+    pl.Ajax.prototype[type]=function(params){
+    }
+  });*/
+})(window);
