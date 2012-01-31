@@ -165,7 +165,7 @@
       }
     },
 
-    getCallbacks: function(fn){
+    get_callbacks: function(fn){
       that=this;
       var cb={};
       if (pl.type(fn,'fn')) {
@@ -178,7 +178,15 @@
         }
       }
       return cb;
-    }
+    },
+    win_bind:function(selector,evt,fn){
+      win.addEventListener(evt, function(e){
+        elems=pl(selector).get()
+        if (elems==e.target || pl.filter(elems, function(el){return el==e.target}).length > 0){
+          fn.call(e.target,e);
+        }
+      });
+    },
   });
   
 })(this, document);
