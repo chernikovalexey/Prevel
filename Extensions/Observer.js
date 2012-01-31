@@ -28,11 +28,6 @@
       };
       
       this.publish = function(that, args) {
-        if(pl.type(args, 'undef')) {
-          args = that;
-          that = pl;
-        }
-        
         if(!pl.type(args, 'arr')) {
           args = [args];
         }
