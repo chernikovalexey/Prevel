@@ -166,7 +166,8 @@
     },
 
     get_callbacks: function(fn){
-      that=this;
+                     console.log(this)
+      var that=this;
       var cb={};
       if (pl.type(fn,'fn')) {
         cb=function() {
@@ -174,7 +175,7 @@
         }
       } else {
         for (i in fn) {
-          cb[i]=pl.getCallbacks.call(that,fn[i]);
+          cb[i]=pl.get_callbacks.call(that,fn[i]);
         }
       }
       return cb;
