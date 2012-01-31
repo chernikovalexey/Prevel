@@ -50,7 +50,7 @@
         } else {
           pl['_' + val] = pl[val];
           pl[val] = function(p) {
-            pl['_' + val](params);
+            pl['_' + val](pl.extend(p,params));
           };
         }
       });
