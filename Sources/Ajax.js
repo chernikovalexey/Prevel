@@ -48,7 +48,7 @@
           if(Request.readyState === 1) {
             (params.load || ef)();
           } else if(Request.readyState === 4) {
-            if(Request.status === 200) {
+            if(Request.status>199 && Request.status<300) {
               (params.success || ef)(
                 params.dataType === 'json' ? // Parse JSON if necessary
                   pl.JSON(Request.responseText) : 
