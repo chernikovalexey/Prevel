@@ -166,7 +166,6 @@
     },
 
     get_callbacks: function(fn){
-                     console.log(this)
       var that=this;
       var cb={};
       if (pl.type(fn,'fn')) {
