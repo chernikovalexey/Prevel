@@ -1,14 +1,3 @@
-/* Prevel Observer Extension
- * (provides basic implemenatation of pattern "observer")
- * 
- * Requirements: Core.js
- * Provides: Publish/Subscribe framework with individual observers
- * 
- * Dual licensed under the:
- *  - GNU LGPL (http://opensource.org/licenses/lgpl-license.php)
- *  - MIT License (http://opensource.org/licenses/mit-license.php)
-**/
-
 (function() {
   
   pl.extend({
