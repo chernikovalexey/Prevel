@@ -1,4 +1,4 @@
-/* Prevel Framework v1.1.10
+/* Prevel Framework v1.1.11
  * http://github.com/chernikovalexey/Prevel
  * 
  * Copyright 2011-2012, Alexey Chernikov
@@ -263,11 +263,12 @@
           if(Request.readyState === 1) {
             (params.load || ef)();
           } else if(Request.readyState === 4) {
-            if(Request.status === 200) {
+            if(Request.status > 199 && Request.status < 300) {
               (params.success || ef)(
                 params.dataType === 'json' ? // Parse JSON if necessary
                   pl.JSON(Request.responseText) : 
-                  Request.responseText
+                  Request.responseText,
+                Request.status
               );
             } else {
               (params.error || ef)(Request.status, Request.responseText);
