@@ -1,4 +1,4 @@
-/* Prevel Framework v1.1.11
+/* Prevel Framework v1.1.12
  * http://github.com/chernikovalexey/Prevel
  * 
  * Copyright 2011-2012, Alexey Chernikov
@@ -171,9 +171,8 @@
     },
     
     each: function(arr, func) {
-      var key = -1;
-      var len = arr.length;
-      while(++key < len) {
+      var key = arr.length;
+      while(--key > -1) {
         // `this` ought to contains the current value
         func.call(arr[key], key, arr[key]);
       }
@@ -211,9 +210,7 @@
   
   // Add `pl` to the global scope
   win.pl = pl;
-})();
-
-/* Module: Ajax.js
+})();/* Module: Ajax.js
  * Requirements: Core.js
  * Provides: Ajax.
  * 
@@ -315,7 +312,6 @@
     }
   });
 })();
-
 /* Module: Dom.js
  * Requirements: Core.js
  * Provides: Different interactions with the DOM.
@@ -805,7 +801,7 @@
     attr: function(attr, set) {
       attr = pl.fixAttr[attr] || attr;
 
-      if(set) {
+      if(!pl.type(set, 'undef')) {
         pl.each(this.elements, function() {
           this[attr] = set;
         }); 
@@ -945,11 +941,9 @@
       return this;
     }
   });
-})();
-
-/* Module: Find.js
+})();/* Module: Find.js
  * Requirements: Core.js
- * Provides: CSS3 queries.
+ * Provides: CSS queries support.
  * 
  * Contains YASS v0.3.9
  * http://yass.webo.in
