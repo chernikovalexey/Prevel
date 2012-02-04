@@ -487,7 +487,7 @@
     attr: function(attr, set) {
       attr = pl.fixAttr[attr] || attr;
 
-      if(set) {
+      if(!pl.type(set, 'undef')) {
         pl.each(this.elements, function() {
           this[attr] = set;
         }); 
