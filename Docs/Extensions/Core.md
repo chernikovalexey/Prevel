@@ -133,7 +133,7 @@ Attaches a script or style file (it will be detected automatically by the file's
 * `url` - path to a file
 * `type` - (only for scripts) type of script
 * `charset` - (only for scripts) charset of script
-* `callback` - function which will be fired when file loaded
+* `load` - function which will be fired when file loaded
 
 __Examples:__
 
@@ -143,7 +143,7 @@ pl.attach({
   url: 'path/to/your/js/common.js',
   type: 'text/javascript',
   charset: 'windows-1251',
-  callback: function(file, time) {
+  load: function(file, time) {
     alert('File ' + file + ' loaded at ' + time + '.');
   }
 });
