@@ -308,6 +308,11 @@
       'mousedown', 'mouseup', 'keypress'
     ],
     
+    selectedBy: function(elem,selector) {
+      elems=pl(selector).get()
+      return (elems==elem || pl.filter(elems, function(el){return el==elem}).length > 0)
+    },
+
     parent: function(elem, step) {
       return step > 0 ? pl.parent(elem.parentNode, --step) : elem;
     },
