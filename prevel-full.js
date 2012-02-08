@@ -1,4 +1,4 @@
-/* Prevel Library v1.2
+/* Prevel Library v1.2.1
  * http://github.com/chernikovalexey/Prevel
  * 
  * Copyright 2011-2012, Alexey Chernikov
@@ -156,9 +156,9 @@
     },
     
     each: function(arr, func) {
-      var key = arr.length;
-      while(--key > -1) {
-        // `this` ought to contains the current value
+      var key = -1;
+      var len = arr.length;
+      while(++key < len) {
         func.call(arr[key], key, arr[key]);
       }
     },
