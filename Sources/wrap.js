@@ -1,4 +1,4 @@
-/* Prevel Framework v%version%
+/* Prevel Library v%version%
  * http://github.com/chernikovalexey/Prevel
  * 
  * Copyright 2011-2012, Alexey Chernikov
