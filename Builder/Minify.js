@@ -4,10 +4,10 @@
     
   function minify(f) {
     console.log('  Minifying..');
-    var ast = uj.parser.parse(f);     // parse code and get the initial AST
-    ast = uj.uglify.ast_mangle(ast);  // get a new AST with mangled names
-    ast = uj.uglify.ast_squeeze(ast); // get an AST with compression optimizations
-    return uj.uglify.gen_code(ast);   // compressed code here
+    var ast = uj.parser.parse(f);     // Parse code and get the initial AST
+    ast = uj.uglify.ast_mangle(ast);  // Get a new AST with mangled names
+    ast = uj.uglify.ast_squeeze(ast); // Get an AST with compression optimizations
+    return uj.uglify.gen_code(ast);   // Return compressed code
   }
   
   module.exports.minify = minify;

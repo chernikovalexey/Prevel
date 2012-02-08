@@ -1,17 +1,9 @@
 /* Prevel Core Extension
- * (adds additional functionality to the Prevel's Core)
- * 
  * Requirements: Core.js
- * Provides:
- *  - Support of a couple methods designated on working with arrays from
- *    the ECMAScript-5 (map, filter, every and so on)
- *  - A possibility to stringify an object
- *  - Checking if given object is `window`
- *  - Attaching scripts and styles
- *  - Assigning `this` to any of functions
 **/
 
 (function(win, doc, undefined) {
+  
   var proto = 'prototype',
       slice = Array[proto].slice,
       stringify = win.JSON && win.JSON.stringify;
@@ -27,10 +19,10 @@
     
     filter: function(array, reservation) {
       var output = [],
-          key    = -1;
+          key    = 0;
       pl.each(array, function(k, val) {
         if(reservation(val)) {
-          output[++key] = val;
+          output[key++] = val;
         }
       });
       return output;
@@ -166,4 +158,4 @@
     }
   });
   
-})(this, document);
+})(window, document);

@@ -1,25 +1,10 @@
 /* Module: Core.js
  * Requirements: -
- * Provides: 
- *  - Extending objects (and their prototypes)
- *  - detecting the type of an object,
- *  - checking if object is empty
- *  - checking if value is in the given array
- *  - removing whitespaces from the both sides of a string
- *  - walking along the array
- *  - checking if object is an array
- *  - JSON parsing
- *  - browser detecting
- *  - converting object to string
- * 
- * Dual licensed under the:
- *  - GNU LGPL (http://opensource.org/licenses/lgpl-license.php)
- *  - MIT License (http://opensource.org/licenses/mit-license.php)
 **/
 
 (function() {
   
-  // Short names for almost all the types
+  // Short names for almost all types
   var types = {
     'function': 'fn',
     object: 'obj',
@@ -189,4 +174,5 @@
   
   // Add `pl` to the global scope
   win.pl = pl;
+  
 })();

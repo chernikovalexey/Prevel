@@ -1,13 +1,9 @@
 /* Module: Ajax.js
  * Requirements: Core.js
- * Provides: Ajax.
- * 
- * Dual licensed under the:
- *  - GNU LGPL (http://opensource.org/licenses/lgpl-license.php)
- *  - MIT License (http://opensource.org/licenses/mit-license.php)
 **/
 
 (function() {
+  
   pl.extend({
     // Convert object to a 'param-string'
     toParams: function(o) {
@@ -99,4 +95,5 @@
       }
     }
   });
+  
 })();

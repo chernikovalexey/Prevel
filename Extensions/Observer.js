@@ -1,19 +1,14 @@
 /* Prevel Observer Extension
- * (provides basic implemenatation of pattern "observer")
+ * (provides basic implementation of "observer" pattern)
  * 
  * Requirements: Core.js
- * Provides: Publish/Subscribe framework with individual observers
- * 
- * Dual licensed under the:
- *  - GNU LGPL (http://opensource.org/licenses/lgpl-license.php)
- *  - MIT License (http://opensource.org/licenses/mit-license.php)
 **/
 
 (function() {
   
   pl.extend({
     Observer: function(fns) {
-      this.fns = fns ? (fns.call ? [fns] : fns) : [];
+      this.fns = fns ? (pl.type(fns, 'fn') ? [fns] : fns) : [];
       
       this.subscribe = function(fn) {
         this.fns.push(fn);
@@ -25,6 +20,14 @@
         if(~pos) {
           this.fns.splice(pos, 1);
         }
+      };
+      
+      this.clean = function() {
+        this.fns = [];
+      };
+      
+      this.has = function(fn) {
+        return !!~pl.inArray(fn, this.fns);
       };
       
       this.publish = function(that, args) {

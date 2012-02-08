@@ -5,24 +5,27 @@
   function loadQueue(q, callback) {
     console.log('Loading files..');
     
-    var padding = ['Core.js']; // Files which should be inserted before
-    var before = ''; // Will be inserted before other code
-    var code = '';
-    var container = 0;
+    var padding = ['Core.js'];  // Files which should be inserted before
+    var before = '';            // Will be inserted before other code
+    var code = '';              // Contains output code
+    var prefix = '\n\n';        // Padding between modules
+    var container = 0;          // Handled files counter
     var complex = q[0].length + q[1].length;
     
+    // Modules (/Sources/)
     q[0].forEach(function(i) {
       if(~padding.indexOf(i)) {
         before = fs.readFileSync(MODULES + i, 'utf-8');
       } else {
-        code += fs.readFileSync(MODULES + i, 'utf-8');
+        code += prefix + fs.readFileSync(MODULES + i, 'utf-8');
       }
       
       ++container;
     });
 
+    // Extensions (/Extensions)
     q[1].forEach(function(i) {
-      code += fs.readFileSync(EXT + i, 'utf-8');
+      code += prefix + fs.readFileSync(EXT + i, 'utf-8');
       ++container;
     });
     

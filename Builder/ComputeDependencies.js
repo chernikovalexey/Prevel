@@ -1,18 +1,15 @@
 (function(DIR, undefined) {
+
+  var fs = require('fs');       // File system API
   
-  // File system API
-  var fs = require('fs');
+  var forbidden = ['wrap.js'];  // Files do not include to the final code
+  var k = ['Core.js'];          // With the highest importance-coefficient
+  var requirements = [];        // Files required to load but did not listed in arguments
+  var queue = [[], []];         // What to load
+  var frequency = {};           // How many files require each other
+  var ready = [false, false];   // Fire callback when both equals true
   
-  // Files do not include to the final code
-  // Here it's because wrap wraps the code, but not attend in it
-  var forbidden = ['wrap.js'];
-  var k = ['Core.js']; // With the highest importance-coefficient
-  var requirements = [];
-  var queue = [[], []]; // What to load
-  var frequency = {};
-  var ready = [false, false]; // Fire callback when both equals true
-  
-  // Unique given array
+  // Unique the given array
   Array.prototype.unique = function() {
     var a = [];
     var l = this.length;
@@ -38,22 +35,30 @@
     return Parent;
   }
   
+  // Fill array with something
+  function fillArray(a, w) {
+    var len = a.length;
+    for(var key = 0; key < len; ++key) {
+      a[key] = w;
+    }
+    return a;
+  }
+  
   // Which files requires current file to work properly
-  function parseRequirements(path) {
+  function parseRequirements(path, callback) {
     fs.readFile(path, 'utf-8', function(err, file) {
       var line = file.match(/Requirements:.*(?!\\n)/);
-      
+            
       if(!line) {
         return;
       }
       
-      addRequirement(line[0]
-        .replace('Requirements: ', '')
-        .trim()
-        .split(','));
+      addRequirement(line[0].replace('Requirements: ', '').trim().split(','));
+      (callback || function() {})();
     });
   }
   
+  // Transform array of parsed requirements to an array
   function addRequirement(array) {
     array.forEach(function(i) {
       i = i.trim();
@@ -78,6 +83,7 @@
   }
   
   function fillQueue(m, e, callback) {
+    // Common functionality
     var common = function(fe, num, forbid, folder) {
       if(fe[0] === '*') {
         fs.readdir(DIR + folder, function(err, files) {
@@ -92,12 +98,23 @@
           setReady();
         });
       } else if(fe[0] !== 'none') {
+        var localReady = fillArray(new Array(fe.length), false);
+        var localIndex = 0;
+        
         fe.forEach(function(i) {
           i = i[0].toUpperCase() + i.substr(1) + '.js';
           queue[num].push(i);
-          parseRequirements(DIR + folder + '/' + i);
+          parseRequirements(DIR + folder + '/' + i, function() {
+            localReady[localIndex++] = true;
+          });
         });
-        setReady();
+        
+        var lm = setInterval(function() {
+          if(!~localReady.indexOf(false)) {
+            setReady();
+            clearInterval(lm);
+          }
+        }, 1);
       } else if(fe[0] === 'none') {
         setReady();
       }
@@ -106,7 +123,8 @@
     common(m, 0, true, 'Sources');
     common(e, 1, false, 'Extensions');
   }
-    
+  
+  // By priority
   function orderQueue(callback) {
     var _q = [];
     

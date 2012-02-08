@@ -1,28 +1,13 @@
 /* Prevel Dom Extension
-* (adds additional functionality to the Prevel's Dom)
-*
-* Requirements: Core.js, Dom.js
-* Provides:
-* - bluring, focusing elements
-* - working with value of text inputs
-* - getting previous, next siblings
-* - wrapping elements
-* - replacing elements with new ones
-* - getting children
+ * Requirements: Core.js, Manipulate.js, Attr.js, Insert.js
 **/
 
 (function(win, doc, undefined) {
   
   pl.extend(pl.fn, {
     toggleClass: function(c) {
-      var cre = new RegExp('\\b' + c + '\\b');
-      
       pl.each(this.elements, function() {
-        if(this.className.match(cre)) {
-          pl(this).removeClass(c);
-        } else {
-          pl(this).addClass(c);
-        }
+        pl(this)[pl(this).hasClass(c) ? 'removeClass' : 'addClass'](c);
       });
       return this;
     },

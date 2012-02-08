@@ -1,11 +1,5 @@
 /* Prevel Ajax Extension
-* (adds additional functionality to the Prevel's Core)
-*
-* Requirements: Core.js, Ajax.js
-* Provides:
-* - get, post, put, and del methods
-* - serialize method
-* - getAjax method returning a reusable Ajax object
+ * Requirements: Core.js, Ajax.js
 **/
 
 (function(win, doc, undefined) {
@@ -50,7 +44,7 @@
         } else {
           pl['_' + val] = pl[val];
           pl[val] = function(p) {
-            pl['_' + val](pl.extend(p,params));
+            pl['_' + val](pl.extend(p, params));
           };
         }
       });
@@ -67,4 +61,4 @@
     }
   });
   
-})(this, document);
+})(window, document);

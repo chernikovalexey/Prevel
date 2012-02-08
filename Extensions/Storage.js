@@ -2,18 +2,6 @@
  * (provides functionality for interacting with cookies, localstorage, ...)
  * 
  * Requirements: Core.js
- * Optional requirements: Prevel Core Extension
- * Provides:
- *  - Working with Cookies
- *  - Working with LocalStorage
- *  - Working with SessionStorage
- *  - Working with complex Prevel Storage (ls + ss + cookies)
- *  
- * Dual licensed under the:
- *  - GNU LGPL (http://opensource.org/licenses/lgpl-license.php)
- *  - MIT License (http://opensource.org/licenses/mit-license.php)
- *
- * TODO: IndexedDB support
 **/
 
 (function(win, doc, undefined) {
