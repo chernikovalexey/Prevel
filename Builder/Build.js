@@ -32,7 +32,7 @@
         
         fs.writeFile(DIR + '../prevel-full.js', w, function(err) {
           if(err) {
-            
+            console.log('Error while filling prevel-full.js:', err);
           } else {
             console.log('  prevel-full.js filled successfully.');
           }
@@ -40,7 +40,7 @@
         
         fs.writeFile(DIR + '../prevel-min.js', m.minify(w), function(err) {
           if(err) {
-            
+            console.log('Error while filling prevel-min.js:', err);
           } else {
             console.log('  prevel-min.js filled successfully.');
             console.log('Prevel has been built successfully.');
