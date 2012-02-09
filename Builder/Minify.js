@@ -12,4 +12,4 @@
   
   module.exports.minify = minify;
   
-})('./UglifyJs/');
+})('./UglifyJS/');
