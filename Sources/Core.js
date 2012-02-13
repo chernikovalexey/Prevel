@@ -135,9 +135,9 @@
     },
     
     each: function(arr, func) {
-      var key = arr.length;
-      while(--key > -1) {
-        // `this` ought to contains the current value
+      var key = -1;
+      var len = arr.length;
+      while(++key < len) {
         func.call(arr[key], key, arr[key]);
       }
     },
