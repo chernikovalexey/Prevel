@@ -61,7 +61,7 @@
     },
     
     children: function() {
-      this.elements = [this.elements[0].childNodes];
+      this.elements = this.elements[0].childNodes;
       return this;
     },
     
