@@ -1,13 +1,13 @@
 (function(DIR, undefined) {
 
-  var fs = require('fs');       // File system API
+  var fs = require('fs');                          // File system API
   
-  var forbidden = ['wrap.js'];  // Files do not include to the final code
-  var k = ['Core.js'];          // With the highest importance-coefficient
-  var requirements = [];        // Files required to load but did not listed in arguments
-  var queue = [[], []];         // What to load
-  var frequency = {};           // How many files require each other
-  var ready = [false, false];   // Fire callback when both equals true
+  var forbidden = ['wrap.js'];                     // Files do not include to the final code
+  var k = ['Core.js', 'Manipulate.js', 'Css.js'];  // With the highest importance-coefficient
+  var requirements = [];                           // Files required to load but did not listed in arguments
+  var queue = [[], []];                            // What to load
+  var frequency = {};                              // How many files require each other
+  var ready = [false, false];                      // Fire callback when both equals true
   
   // Unique the given array
   Array.prototype.unique = function() {
@@ -128,20 +128,15 @@
   function orderQueue(callback) {
     var _q = [];
     
-    var temp = {};
     k.forEach(function(i) {
-      for(var key in frequency) {
-        if(i === key) {
-          temp[key] = frequency[key];
-        }
+      if(~queue[0].indexOf(i)) {
+        _q.push(i);
       }
     });
     
-    frequency = extend(temp, frequency);
-    
     for(var key in frequency) {
       queue[0].forEach(function(i) {
-        if(i === key) {
+        if(i === key && !~_q.indexOf(i)) {
           _q.push(i);
         }
       });
@@ -152,7 +147,7 @@
         _q.push(i);
       }
     });
-        
+    
     queue[0] = _q;
     callback();
   }
