@@ -153,8 +153,6 @@
       }
     });
     
-    console.log('After:', _q);
-    
     queue[0] = _q;
     callback();
   }
