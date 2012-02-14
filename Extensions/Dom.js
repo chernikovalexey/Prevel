@@ -86,7 +86,12 @@
     },
     
     children: function(selector) {
-      return pl.related(this.elements ? this.elements[0] : this,'children',selector||1);
+      var children=pl.related(this.elements ? this.elements[0] : this,'children',1);
+      if (selector) 
+        children.elements=pl.filter(children.elements,function(e){
+          return pl.selectedBy(e, selector);
+        });
+      return children;
     },
 
     parents: function(selector) {
