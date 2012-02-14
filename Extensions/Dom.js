@@ -18,10 +18,11 @@
         }
       } else {
         var func=function(e,selector){
-          var ret=[];var rel;
+          var ret=[];var rel,i;
           if (rel=e[fn]){
             if( !selector||pl.selectedBy(rel,selector)) ret.push(rel);
-            return ret.concat(func(rel,selector));
+            if (i=func(rel,selector)) return ret.concat(i);
+            return ret;
           }
         }
       }
@@ -89,7 +90,7 @@
     },
 
     parents: function(selector) {
-      return pl.related(this.elements ? this.elements[0] : this,'parent',selector);
+      return pl.related(this.elements ? this.elements[0] : this,'parentNode',selector);
     },
     
     replaceWith: function(el, options) {
