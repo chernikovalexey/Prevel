@@ -1765,7 +1765,33 @@
 **/
 
 (function(win, doc, undefined) {
-  
+  pl.extend({
+    selectedBy: function(elem,selector) {
+      var elems=pl(selector).get()
+      return (elems===elem || pl.filter(elems, function(el){return el==elem}).length > 0)
+    },
+
+    related:function(elem,fn,mod){
+      var ret=pl();
+      ret.selector=[elem.id,fn,mod];
+      if (pl.type(mod,'int')){
+        var func=function(e,step){
+          return step > 0 ? func(e[fn], --step) : e;
+        }
+      } else {
+        var func=function(e,selector){
+          var ret=[];var rel;
+          if (rel=e[fn]){
+            if( !selector||pl.selectedBy(rel,selector)) ret.push(rel);
+            return ret.concat(func(rel,selector));
+          }
+        }
+      }
+      ret.elements=func(elem,mod);
+      return ret;
+    }
+  });
+
   pl.extend(pl.fn, {
     toggleClass: function(c) {
       pl.each(this.elements, function() {
@@ -1808,23 +1834,24 @@
       }
     },
     
+    selectedBy: function(selector) {
+      return pl.selectedBy(this.get(),selector);
+    },
+
     prev: function(iterations) {
-      for(var key = 0; key < (iterations || 1); ++key) {
-        this.elements = [this.elements[0].previousSibling];
-      }
-      return this;
+      return pl.related(this.elements[0],'previousSibling',iterations||1);
     },
     
     next: function(iterations) {
-      for(var key = 0; key < (iterations || 1); ++key) {
-        this.elements = [this.elements[0].nextSibling];
-      }
-      return this;
+      return pl.related(this.elements[0],'nextSibling',iterations||1);
     },
     
-    children: function() {
-      this.elements = [this.elements[0].childNodes];
-      return this;
+    children: function(selector) {
+      return pl.related(this.elements ? this.elements[0] : this,'children',selector||1);
+    },
+
+    parents: function(selector) {
+      return pl.related(this.elements ? this.elements[0] : this,'parent',selector);
     },
     
     replaceWith: function(el, options) {
@@ -1845,6 +1872,7 @@
   });
   
 })(this, document);
+
 
 /* Prevel Storage Extension
  * (provides functionality for interacting with cookies, localstorage, ...)
