@@ -1,4 +1,4 @@
-/* Prevel Library v1.2.2
+/* Prevel Library v1.2.4
  * http://github.com/chernikovalexey/Prevel
  * 
  * Copyright 2011-2012, Alexey Chernikov
@@ -163,7 +163,18 @@
       }
     },
     
-    inArray: function(a, c, b, r){
+    // Moved from Core Extension
+    filter: function(array, reservation) {
+      var output = [];
+      pl.each(array, function(k, val) {
+        if(reservation(val)) {
+          output.push(val);
+        }
+      });
+      return output;
+    },
+    
+    inArray: function(a, c, b, r) {
       if(indexOf) return c.indexOf(a, b);
       for(b = b > 0 || -1, r = -1; ++b < c.length && !~r; r = c[b] === a ? b : r);
       return r;
