@@ -4,6 +4,62 @@
 
 (function(win, doc, undefined) {
   
+  /* NOTE:
+   * this.elements (in pl() instance) always exists, so checking if this.elements equals true
+   * is senseless, it will be always true. Much better will be checking if it's empty or 
+   * trying to compare the first element with false values (false, null, undefined).
+   * 
+   * Examples:
+   * this.elements[0] || ...
+   * pl.empty(this.elements)
+   * this.elements[0] !== undefined
+  **/
+  
+  pl.extend({
+    selectedBy: function(elem, selector) {
+      var elems = pl(selector).get();
+      return elems === elem || pl.filter(elems, function(el) {
+        return el === elem;
+      }).length > 0;
+    },
+
+    related: function(elem, fn, mod) {
+      if(pl.type(mod, 'undef')) {
+        mod = 1;
+      }
+      
+      var get;
+      var ret = pl();
+      ret.selector = [elem.id, fn, mod];
+      
+      if(pl.type(mod, 'int')) {
+        get = function(e, step) {
+          return step > 0 ? get(e[fn], --step) : e;
+        };
+      } else {
+        get = function(e, selector) {
+          var ret = [];
+          var rel, i;
+          
+          if(rel = e[fn]) {
+            if(!selector || pl.selectedBy(rel, selector)) {
+              ret.push(rel);
+            }
+            
+            if(i = get(rel, selector)) {
+              return ret.concat(i);
+            }
+            
+            return ret;
+          }
+        };
+      }
+      
+      ret.elements = get(elem, mod);
+      return ret;
+    }
+  });
+
   pl.extend(pl.fn, {
     toggleClass: function(c) {
       pl.each(this.elements, function() {
@@ -45,24 +101,27 @@
         return this.elements[0].value;
       }
     },
-    
+
     prev: function(iterations) {
-      for(var key = 0; key < (iterations || 1); ++key) {
-        this.elements = [this.elements[0].previousSibling];
-      }
-      return this;
+      return pl.related(this.elements[0], 'previousSibling', iterations);
     },
     
     next: function(iterations) {
-      for(var key = 0; key < (iterations || 1); ++key) {
-        this.elements = [this.elements[0].nextSibling];
-      }
-      return this;
+      return pl.related(this.elements[0], 'nextSibling', iterations);
     },
     
-    children: function() {
-      this.elements = this.elements[0].childNodes;
-      return this;
+    children: function(selector) {
+      var children = pl.related(this.elements[0] || this, 'children');
+      if(selector) {
+        children.elements = pl.filter(children.elements, function(e) {
+          return pl.selectedBy(e, selector);
+        });
+      }
+      return children;
+    },
+
+    parents: function(selector) {
+      return pl.related(this.elements[0] || this, 'parentNode', selector || '*');
     },
     
     replaceWith: function(el, options) {
