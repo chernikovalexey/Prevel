@@ -565,6 +565,159 @@
   
 })();
 
+/* Module: Insert.js
+ * Requirements: Core.js, Manipulate.js
+**/
+
+(function() {
+  
+  pl.extend({
+    innerText: pl.browser('ie') ? 'innerText' : 'textContent',
+        
+    innerContent: {
+      midst: function(e, method, ins, to) {
+        var init = e;
+        var e = init.elements[0];
+
+        if(pl.type(ins, u)) {
+          return e[method];
+        } else {
+          if(pl.type(ins, 'obj')) {
+            var temp = doc.createElement('div');
+            temp.appendChild(ins);
+            ins = temp.innerHTML;
+          }
+              
+          pl.each(init.elements, function() {
+            if(!to) {
+              this[method] = ins;
+            } else if(~to) {
+              this[method] += ins;
+            } else {
+              this[method] = ins + this[method];
+            }
+          });
+          return init;
+        }
+      },
+          
+      edge: function(_this, args, table, dir, fn) {
+        var a = pl.clean(args);
+        for(var i = (dir < 0 ? a.length - 1 : 0); i != (dir < 0 ? dir : a.length); i += dir) {
+          fn(_this, a[i]);
+        }
+      }
+    },
+    
+    clean: function(a) {
+      var r = [];
+      var len = a.length;
+      
+      for(var i = 0; i < len; ++i) {
+        if(pl.type(a[i], 'str')) {         
+          var table = '';
+    
+          if(!a[i].indexOf('<thead') || !a[i].indexOf('<tbody')) {
+            table = 'thead';
+            a[i] = '<table>' + a[i] + '</table>';
+          } else if(!a[i].indexOf('<tr')) {
+            table = 'tr';
+            a[i] = '<table>' + a[i] + '</table>';
+          } else if(!a[i].indexOf('<td') || !a[i].indexOf('<th')) {
+            table = 'td';
+            a[i] = '<table><tbody><tr>' + a[i] + '</tr></tbody></table>';
+          }
+    
+          var div = doc.createElement('div');
+          div.innerHTML = a[i];
+    
+          if(table) {
+            div = div.firstChild;
+            if(table !== 'thead') div = div.firstChild;
+            if(table === 'td') div = div.firstChild;
+          }
+
+          var cn_len = div.childNodes.length;
+          for(var j = 0; j < cn_len; ++j) {
+            r.push(div.childNodes[j]);
+          }
+        } else if(a[i] !== n) {
+          r.push(a[i].nodeType ? a[i] : doc.createTextNode(a[i].toString()));
+        }
+      }
+      
+      return r;
+    }
+  });
+  
+  pl.extend(pl.fn, {
+    html: function(ins, to) {
+      // Delegate to the common method
+      return pl.innerContent.midst(this, 'innerHTML', ins, to);
+    },
+    
+    text: function(ins, to) {
+      // The same as in pl().html()
+      return pl.innerContent.midst(this, pl.innerText, ins, to);
+    },
+    
+    after: function() {
+      var args = arguments;
+      pl.each(this.elements, function() {
+        pl.innerContent.edge(this, args, false, -1, function(o, a) {
+          o.parentNode.insertBefore(a, o.nextSibling);
+        });
+      });
+      return this;
+    },
+    
+    before: function() {
+      var args = arguments;
+      pl.each(this.elements, function() {
+        pl.innerContent.edge(this, args, false, 1, function(o, a) {
+          o.parentNode.insertBefore(a, o);
+        });
+      });
+      return this;
+    },
+        
+    append: function() {
+      var args = arguments;
+      pl.each(this.elements, function() {
+        pl.innerContent.edge(this, args, true, 1, function(o, a) {
+          o.appendChild(a);
+        });
+      });
+      return this;
+    },
+
+    prepend: function() {
+      var args = arguments;
+      pl.each(this.elements, function() {
+        pl.innerContent.edge(this, args, true, -1, function(o, a){
+          o.insertBefore(a, o.firstChild);
+        });
+      });
+      return this;
+    },
+   
+    appendTo: function(selector, context, index) {
+      pl.each(this.elements, function() {
+        pl(selector, context, index).append(this);
+      });
+      return this;
+    },
+    
+    prependTo: function(selector, context, index) {
+      pl.each(this.elements, function() {
+        pl(selector, context, index).prepend(this);
+      });
+      return this;
+    }
+  });
+  
+})();
+
 /* Module: Events.js
  * Requirements: Core.js, Manipulate.js
 **/
@@ -1321,159 +1474,6 @@
   
 })();
 
-/* Module: Insert.js
- * Requirements: Core.js, Manipulate.js
-**/
-
-(function() {
-  
-  pl.extend({
-    innerText: pl.browser('ie') ? 'innerText' : 'textContent',
-        
-    innerContent: {
-      midst: function(e, method, ins, to) {
-        var init = e;
-        var e = init.elements[0];
-
-        if(pl.type(ins, u)) {
-          return e[method];
-        } else {
-          if(pl.type(ins, 'obj')) {
-            var temp = doc.createElement('div');
-            temp.appendChild(ins);
-            ins = temp.innerHTML;
-          }
-              
-          pl.each(init.elements, function() {
-            if(!to) {
-              this[method] = ins;
-            } else if(~to) {
-              this[method] += ins;
-            } else {
-              this[method] = ins + this[method];
-            }
-          });
-          return init;
-        }
-      },
-          
-      edge: function(_this, args, table, dir, fn) {
-        var a = pl.clean(args);
-        for(var i = (dir < 0 ? a.length - 1 : 0); i != (dir < 0 ? dir : a.length); i += dir) {
-          fn(_this, a[i]);
-        }
-      }
-    },
-    
-    clean: function(a) {
-      var r = [];
-      var len = a.length;
-      
-      for(var i = 0; i < len; ++i) {
-        if(pl.type(a[i], 'str')) {         
-          var table = '';
-    
-          if(!a[i].indexOf('<thead') || !a[i].indexOf('<tbody')) {
-            table = 'thead';
-            a[i] = '<table>' + a[i] + '</table>';
-          } else if(!a[i].indexOf('<tr')) {
-            table = 'tr';
-            a[i] = '<table>' + a[i] + '</table>';
-          } else if(!a[i].indexOf('<td') || !a[i].indexOf('<th')) {
-            table = 'td';
-            a[i] = '<table><tbody><tr>' + a[i] + '</tr></tbody></table>';
-          }
-    
-          var div = doc.createElement('div');
-          div.innerHTML = a[i];
-    
-          if(table) {
-            div = div.firstChild;
-            if(table !== 'thead') div = div.firstChild;
-            if(table === 'td') div = div.firstChild;
-          }
-
-          var cn_len = div.childNodes.length;
-          for(var j = 0; j < cn_len; ++j) {
-            r.push(div.childNodes[j]);
-          }
-        } else if(a[i] !== n) {
-          r.push(a[i].nodeType ? a[i] : doc.createTextNode(a[i].toString()));
-        }
-      }
-      
-      return r;
-    }
-  });
-  
-  pl.extend(pl.fn, {
-    html: function(ins, to) {
-      // Delegate to the common method
-      return pl.innerContent.midst(this, 'innerHTML', ins, to);
-    },
-    
-    text: function(ins, to) {
-      // The same as in pl().html()
-      return pl.innerContent.midst(this, pl.innerText, ins, to);
-    },
-    
-    after: function() {
-      var args = arguments;
-      pl.each(this.elements, function() {
-        pl.innerContent.edge(this, args, false, -1, function(o, a) {
-          o.parentNode.insertBefore(a, o.nextSibling);
-        });
-      });
-      return this;
-    },
-    
-    before: function() {
-      var args = arguments;
-      pl.each(this.elements, function() {
-        pl.innerContent.edge(this, args, false, 1, function(o, a) {
-          o.parentNode.insertBefore(a, o);
-        });
-      });
-      return this;
-    },
-        
-    append: function() {
-      var args = arguments;
-      pl.each(this.elements, function() {
-        pl.innerContent.edge(this, args, true, 1, function(o, a) {
-          o.appendChild(a);
-        });
-      });
-      return this;
-    },
-
-    prepend: function() {
-      var args = arguments;
-      pl.each(this.elements, function() {
-        pl.innerContent.edge(this, args, true, -1, function(o, a){
-          o.insertBefore(a, o.firstChild);
-        });
-      });
-      return this;
-    },
-   
-    appendTo: function(selector, context, index) {
-      pl.each(this.elements, function() {
-        pl(selector, context, index).append(this);
-      });
-      return this;
-    },
-    
-    prependTo: function(selector, context, index) {
-      pl.each(this.elements, function() {
-        pl(selector, context, index).prepend(this);
-      });
-      return this;
-    }
-  });
-  
-})();
-
 /* Module: Visibility.js
  * Requirements: Core.js, Manipulate.js, Css.js
 **/
@@ -1504,6 +1504,612 @@
   });
   
 })();
+
+/* Prevel Ajax Extension
+ * Requirements: Core.js, Ajax.js
+**/
+
+(function(win, doc, undefined) {
+  
+  pl.extend({
+    get: function(params, callback, type) {
+      pl.ajax(pl.type(params, 'obj') ? params : {
+        url: params,
+        success: callback,
+        dataType: type
+      });
+    },
+    
+    post: function(params, data, callback, type) {
+      pl.ajax(pl.type(params, 'obj') ? pl.extend(params, {type: 'POST'}) : {
+        url: params,
+        type: 'POST',
+        data: data,
+        success: callback,
+        dataType: type
+      });
+    },
+    
+    put: function(params) {
+      params.data = params.data || {};
+      params.data.action = 'put';
+      pl.post(params);
+    },
+    
+    del: function(params) {
+      params.data = params.data || {};
+      params.data.action = 'delete';
+      pl.post(params);
+    },
+    
+    // Adding and removing
+    ajaxDefaults: function(params) {
+      pl.each(['ajax', 'get', 'post', 'put', 'del'], function(k, val) {
+        if(params === 'remove') {
+          pl[val] = pl['_' + val];
+          pl['_' + val] = undefined;
+        } else {
+          pl['_' + val] = pl[val];
+          pl[val] = function(p) {
+            pl['_' + val](pl.extend(p, params));
+          };
+        }
+      });
+    },
+    
+    serialize: function(form) {
+      var o = {};
+      pl('form#' + form + ' input, form#' + form + ' textarea').each(function() {
+        if(this.type !== 'submit') {
+          o[this.name] = this.value;
+        }
+      });
+      return o;
+    }
+  });
+  
+})(window, document);
+
+/* Prevel Core Extension
+ * Requirements: Core.js
+**/
+
+(function(win, doc, undefined) {
+  
+  var proto = 'prototype',
+      slice = Array[proto].slice,
+      stringify = win.JSON && win.JSON.stringify;
+  
+  pl.extend({    
+    map: function(array, fn) {
+      var output = [];
+      pl.each(array, function() {
+        output.push(fn(this));
+      });
+      return output;
+    },
+    
+    every: function(array, reservation) {
+      var flag = true;
+      pl.each(array, function(k, val) {
+        if(!reservation(val)) {
+          flag = false;
+        }
+      });
+      return flag;
+    },
+    
+    some: function(array, reservation) {
+      var flag = false;
+      pl.each(array, function(k, val) {
+        if(reservation(val)) {
+          flag = true;
+        }
+      });
+      return flag;
+    },
+    
+    unique: function(array) {
+      var a = [];
+      var l = array.length;
+      for(var i = 0; i < l; ++i) {
+        for(var j = i + 1; j < l; ++j) {
+          if(array[i] === array[j]) {
+            j = ++i;
+          }
+        }
+        a.push(array[i]);
+      }
+      return a;
+    },
+    
+    // Is window
+    isWin: function(Obj) {
+      return pl.type(Obj, 'obj') && 'setInterval' in Obj;
+    },
+    
+    // Attach script or css
+    attach: function(params) {
+      var add;
+      params.load = params.load || function() {};
+      
+      if(params.url.substr(-3) === '.js') { 
+        add = pl('<script>', pl.extend({
+          src: params.url, 
+          type: params.type || 'text/javascript'
+        }, params.charset ? {charset: params.charset} : {})).get();
+        
+        var _load = params.load;
+        params.load = function() {
+          _load(params.url, +new Date());
+        };
+        
+        // attachEvent doesn't support adding events to objects, so
+        // it's not possible to use `pl.events.attaches.bind`
+        add.onreadystatechange = function(e) {        
+          if(e.readyState === 'complete') {
+            params.load();
+          }
+        };        
+        add.onload = params.load;
+      } else {
+        add = pl('<link>', {
+          href: params.url,
+          rel: 'stylesheet',
+          type: 'text/css'
+        }).get();
+        
+        var sheet, cssRules;
+        if('sheet' in add) {
+          sheet = 'sheet';
+          cssRules = 'cssRules';
+        } else {
+          sheet = 'styleSheet';
+          cssRules = 'rules';
+        }
+        
+        var timeout = setInterval(function() {
+          try {
+            if(add[sheet] && add[sheet][cssRules].length) {
+              clearInterval(timeout);
+              params.load.call(params.url, +new Date());
+            }
+          } catch(e) {}
+        }, 10);
+      }
+      
+      pl('head').append(add);
+      return this;
+    },
+    
+    proxy: function(context, source) {
+      if(!pl.type(context, 'fn')) {
+        return undefined;
+      }
+
+      return function() {
+        return context.apply(
+          source,
+          slice.call(arguments, 2).concat(slice.call(arguments))
+        );
+      };
+    },
+    
+    stringify: stringify ? win.JSON.stringify : function(obj) {
+      var t = pl.type(obj);
+      if(t === 'null') {
+        return String(obj);
+      } else {
+        var n, v, json = [], arr = pl.type(obj, 'arr');
+          
+        for(n in obj) {
+          v = obj[n];
+          t = pl.type(v);
+          
+          if(t === 'str') {
+            v = '"' + v + '"';
+          } else if(t === 'obj') {
+            v = pl.stringify(v);
+          }
+          
+          json.push((arr ? '' : '"' + n + '":') + String(v));
+        }
+        return (arr ? '[' : '{') + String(json) + (arr ? ']' : '}');
+      }
+    }
+  });
+  
+})(window, document);
+
+/* Prevel Dom Extension
+ * Requirements: Core.js, Manipulate.js, Attr.js, Insert.js
+**/
+
+(function(win, doc, undefined) {
+  
+  /* NOTE:
+   * this.elements (in pl() instance) always exists, so checking if this.elements equals true
+   * is senseless, it will be always true. Much better will be checking if it's empty or 
+   * trying to compare the first element with false values (false, null, undefined).
+   * 
+   * Examples:
+   * this.elements[0] || ...
+   * pl.empty(this.elements)
+   * this.elements[0] !== undefined
+  **/
+  
+  pl.extend({
+    selectedBy: function(elem, selector) {
+      var elems = pl(selector).get();
+      return elems === elem || pl.filter(elems, function(el) {
+        return el === elem;
+      }).length > 0;
+    },
+
+    related: function(elem, fn, mod) {
+      if(pl.type(mod, 'undef')) {
+        mod = 1;
+      }
+      
+      var get;
+      var ret = pl();
+      ret.selector = [elem.id, fn, mod];
+      
+      if(pl.type(mod, 'int')) {
+        get = function(e, step) {
+          return step > 0 ? get(e[fn], --step) : e;
+        };
+      } else {
+        get = function(e, selector) {
+          var ret = [];
+          var rel, i;
+          
+          if(rel = e[fn]) {
+            if(!selector || pl.selectedBy(rel, selector)) {
+              ret.push(rel);
+            }
+            
+            if(i = get(rel, selector)) {
+              return ret.concat(i);
+            }
+            
+            return ret;
+          }
+        };
+      }
+      
+      ret.elements = get(elem, mod);
+      return ret;
+    }
+  });
+
+  pl.extend(pl.fn, {
+    toggleClass: function(c) {
+      pl.each(this.elements, function() {
+        pl(this)[pl(this).hasClass(c) ? 'removeClass' : 'addClass'](c);
+      });
+      return this;
+    },
+    
+    blur: function() {
+      pl.each(this.elements, function() {
+        this.blur();
+      });
+      return this;
+    },
+    
+    focus: function() {
+      pl.each(this.elements, function() {
+        this.focus();
+      });
+      return this;
+    },
+    
+    empty: function() {
+      return pl(this.elements).html('');
+    },
+    
+    tag: function(is) {
+      var tn = this.elements[0].tagName.toLowerCase();
+      return is ? is === tn : tn;
+    },
+    
+    val: function(insert) {
+      if(!pl.type(insert, 'undef')) {
+        pl.each(this.elements, function() {
+          this.value = insert;
+        });
+        return this;
+      } else {
+        return this.elements[0].value;
+      }
+    },
+
+    prev: function(iterations) {
+      return pl.related(this.elements[0], 'previousSibling', iterations);
+    },
+    
+    next: function(iterations) {
+      return pl.related(this.elements[0], 'nextSibling', iterations);
+    },
+    
+    children: function(selector) {
+      var children = pl.related(this.elements[0] || this, 'children');
+      if(selector) {
+        children.elements = pl.filter(children.elements, function(e) {
+          return pl.selectedBy(e, selector);
+        });
+      }
+      return children;
+    },
+
+    find: function(selector) {
+      var children = pl.related(this.elements[0] || this, 'children');
+      var list = [];
+      pl.each(children.elements, function(k, v) {
+        if(pl.selectedBy(this, selector)) {
+          list.push(v);
+        } else if(pl.type(v, 'obj')) {
+          var found = pl(this).find(selector).get();
+          found = pl.type(found, 'arr') ? found : [found];
+          list = list.concat(found);
+        }
+      });
+      
+      children.elements = list;
+      return children;
+    },
+    
+    parents: function(selector) {
+      return pl.related(this.elements[0] || this, 'parentNode', selector || '*');
+    },
+    
+    replaceWith: function(el, options) {
+      el = pl.type(el, 'str') ? pl(el, options || {}).get() : el;
+      pl.each(this.elements, function() {
+        this.parentNode.replaceChild(el, this);
+      });
+      return this;
+    },
+    
+    wrap: function(w, options) {
+      w = pl.type(w, 'str') ? pl(w, options || {}).get() : w;
+      pl.each(this.elements, function() {
+        pl(this).replaceWith(w).appendTo(w);
+      });
+      return this;
+    }
+  });
+  
+})(this, document);
+
+/* Prevel Observer Extension
+ * (provides basic implementation of "observer" pattern)
+ * 
+ * Requirements: Core.js
+**/
+
+(function() {
+  
+  pl.extend({
+    Observer: function(fns) {
+      this.fns = fns ? (pl.type(fns, 'fn') ? [fns] : fns) : [];
+      
+      this.subscribe = function(fn) {
+        this.fns.push(fn);
+      };
+      
+      this.unsubscribe = function(fn) {
+        var pos = pl.inArray(fn, this.fns);
+        
+        if(~pos) {
+          this.fns.splice(pos, 1);
+        }
+      };
+      
+      this.clean = function() {
+        this.fns = [];
+      };
+      
+      this.has = function(fn) {
+        return !!~pl.inArray(fn, this.fns);
+      };
+      
+      this.publish = function(that, args) {
+        if(!pl.type(args, 'arr')) {
+          args = [args];
+        }
+        
+        pl.each(this.fns, function() {
+          this.apply(that, args);
+        });
+      };
+    }
+  });
+  
+})();
+
+/* Prevel Storage Extension
+ * (provides functionality for interacting with cookies, localstorage, ...)
+ * 
+ * Requirements: Core.js
+**/
+
+(function(win, doc, undefined) {
+  
+  var prefixes = {
+        localStorage: 'ls_',
+        sessionStorage: 'ss_'
+      },
+      
+      cookieAsSession = 60 * 60 * 24,
+      cookieAsStorage = cookieAsSession * 31 * 12 * 4,
+      
+      stringify = pl.stringify ? 
+        pl.stringify : 
+        win.JSON && win.JSON.stringify ? 
+          win.JSON.stringify : 
+          function(o) {return o;};
+  
+  pl.extend({
+    getStorage: function(name, type) {
+      var support = !!type;
+      return support ? type.getItem(name) : pl.storage.cookie(prefixes[String(type)] + name);
+    },
+    
+    setStorage: function(name, val, type) {
+      var support = !!type;
+      
+      if(support) {
+        if(pl.type(val, 'obj')) {
+          val = stringify(val);
+        }
+        
+        type.setItem(name, val);
+      } else {
+        pl.storage.cookie.set(prefixes[String(type)] + name, val, {
+          expires: type === 'localStorage' ? cookieAsStorage : cookieAsSession
+        });
+      }
+      
+      return storage[type];
+    },
+    
+    delStorage: function(name, type) {
+      var support = !!type;
+      
+      if(support) {
+        type.removeItem(name);
+      } else {
+        pl.storage.cookie.del(prefixes[String(type)] + name);
+      }
+      
+      return storage[type];
+    }
+  });
+  
+  // Main Router
+  var storage = (function() {
+    return function(name) {
+      return new storage.complexGet(name);
+    };
+  })();
+  
+  pl.extend(storage, {
+    // Storage Cookie Router
+    cookie: (function() {
+      return function(name) {
+        return new storage.cookie.get(name);
+      };
+    })(),
+    
+    // Storage LocalStorage Router
+    ls: (function() {
+      return function(name) {
+        return new storage.ls.get(name);
+      };
+    })(),
+    
+    session: (function() {
+      return function(name) {
+        return new storage.session.get(name);
+      };
+    })(),
+    
+    // Complex storage (based on all the technics)
+    complexGet: function(name) {
+      var token = [
+        storage.cookie(name),
+        storage.ls(name),
+        storage.session(name)
+      ];
+      
+      var ret, _break = false;
+      pl.each(token, function(key, val) {
+        if(_break) return;
+        if(val) {
+          ret = val;
+          _break = true;
+        } 
+      });
+      return ret;
+    },
+    set: function(name, val) {
+      storage.cookie.set(name, val, {expires: cookieAsStorage});
+      storage.session.set(name, val);
+      return storage.ls.set(name, val);
+    },
+    del: function(name) {
+      storage.cookie.del(name);
+      storage.ls.del(name);
+      storage.session.del(name);
+    }
+  });
+  
+  // Storage Cookie Model
+  pl.extend(storage.cookie, {
+    get: function(name) {
+      var matches = doc.cookie.match(new RegExp(
+        '(?:^|; )' + 
+        name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + 
+        '=([^;]*)'
+      ));
+      return matches ? decodeURIComponent(matches[1]) : null;
+    },
+    set: function(name, val, options) {
+      options = options || {};
+      var exp = options.expires;
+      if(exp) {
+        if(exp.toUTCString) {
+          exp = exp.toUTCString();
+        } else if(pl.type(exp, 'int')) {
+          exp = exp * 1000 + (+new Date());
+        }
+        options.expires = exp;
+      }
+
+      var cookie = [name + '=' + encodeURIComponent(val)];
+      for(var o in options) {
+        cookie.push(options[o] === true ? o : o + '=' + options[o]);
+      }
+      doc.cookie = cookie.join('; ');
+
+      return storage.cookie;
+    },
+    del: function(name) {
+      return storage.cookie.set(name, '', {expires: -1});
+    }
+  });
+  
+  // Local Storage Model
+  pl.extend(storage.ls, {
+    get: function(name) {
+      return pl.getStorage(name, localStorage);
+    },
+    set: function(name, val) {
+      return pl.setStorage(name, val, localStorage);
+    },
+    del: function(name) {
+      return pl.delStorage(name, localStorage);
+    }
+  });
+  
+  // Session Storage Model
+  pl.extend(storage.session, {
+    get: function(name) {
+      return pl.getStorage(name, sessionStorage);
+    },
+    set: function(name, val) {
+      return pl.setStorage(name, val, sessionStorage);
+    },
+    del: function(name) {
+      return pl.delStorage(name, sessionStorage);
+    }
+  });
+  
+  pl.extend({storage: storage});
+  
+})(this, document);
 
 })(this, document, 'prototype', 'addEventListener', 
    'getElement', 'className', 'null', 'undef', 

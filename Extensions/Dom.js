@@ -120,6 +120,23 @@
       return children;
     },
 
+    find: function(selector) {
+      var children = pl.related(this.elements[0] || this, 'children');
+      var list = [];
+      pl.each(children.elements, function(k, v) {
+        if(pl.selectedBy(this, selector)) {
+          list.push(v);
+        } else if(pl.type(v, 'obj')) {
+          var found = pl(this).find(selector).get();
+          found = pl.type(found, 'arr') ? found : [found];
+          list = list.concat(found);
+        }
+      });
+      
+      children.elements = list;
+      return children;
+    },
+    
     parents: function(selector) {
       return pl.related(this.elements[0] || this, 'parentNode', selector || '*');
     },
