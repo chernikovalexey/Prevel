@@ -850,7 +850,8 @@
         '!=': function(child, attr, value) {
           return 
             !(attr = child.getAttribute(attr)) || 
-            !(new RegExp('(^| +)' + value + '($| +)').test(attr));
+            !(new RegExp('(^| +)' + value + '($| +)').test(attr)) ||
+            true;
         }
       },
       
@@ -1011,6 +1012,8 @@
               value = attrs[3];
 
           while(node = nodes[i++]) {
+            console.log('216:', eql);
+            
             if(
              _.attr[eql] && 
              (
@@ -1033,7 +1036,7 @@
           break;
         }
       } else {
-        if(qsSupport && selector.indexOf('!=') == -1) {     
+        if(qsSupport && !~selector.indexOf('!=')) {
           sets = root.querySelectorAll(
             selector.replace(/=([^\]]+)/, '="$1"')
           );
@@ -1096,6 +1099,8 @@
                     childs = child[ge + 'sByTagName'](tag);
                     h = 0;
     
+                    console.log('304: ...');
+                    
                     while(item = childs[h++]) {
                       if(
                          (!id || item.id === id) && 
@@ -1125,8 +1130,10 @@
                            mod
                          )
                       ) {
+                        console.log('Passed.');
+                        
                         if(last) {
-                        item.yeasss = 1;
+                          item.yeasss = 1;
                         }
                         newNodes[idx++] = item;
                       }

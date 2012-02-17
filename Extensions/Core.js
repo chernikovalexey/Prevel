@@ -11,23 +11,12 @@
   pl.extend({    
     map: function(array, fn) {
       var output = [];
-      pl.each(array, function(k) {
-        output[k] = fn(this);
+      pl.each(array, function() {
+        output.push(fn(this));
       });
       return output;
     },
     
-    filter: function(array, reservation) {
-      var output = [],
-          key    = 0;
-      pl.each(array, function(k, val) {
-        if(reservation(val)) {
-          output[key++] = val;
-        }
-      });
-      return output;
-    },
-     
     every: function(array, reservation) {
       var flag = true;
       pl.each(array, function(k, val) {
