@@ -128,8 +128,7 @@
           list.push(v);
         } else if(pl.type(v, 'obj')) {
           var found = pl(this).find(selector).get();
-          found = pl.type(found, 'arr') ? found : [found];
-          list = list.concat(found);
+          list = list.concat(pl.type(found, 'arr') ? found : [found]);
         }
       });
       
