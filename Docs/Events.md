@@ -30,6 +30,21 @@ In addition, it's possible to attach not only one event listener. Example:
   });
   ```
 
+__IMPORTANT:__
+
+Prevel has the in-built functionality for mending `Event Objects`.
+
+The following code will work properly in all browsers, irrespective whether it's IE or Chrome.
+
+```javascript
+var h = function(e) {
+  console.log( e.keyCode ); // Key code
+  console.log( e.which );   // Mouse button pressed
+  console.log( e.pageX, e.pageY ); // Coordinates
+  console.log( e.target ); // Element, on which click has just happened
+};
+```
+
 ---
 
 ###pl().unbind(event, fn)
