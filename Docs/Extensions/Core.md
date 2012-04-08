@@ -1,7 +1,9 @@
 #Prevel Core Extension
 
-This will be only useful if you use __[Prevel Core Extension](https://github.com/chernikovalexey/Prevel/blob/master/Extensions/Core.js)__
+This documentation will be only useful if you used __[Prevel Core Extension](https://github.com/chernikovalexey/Prevel/blob/master/Extensions/Core.js)__
 which is available as an addition to Prevel.
+
+To use it, you can simply attach it as the additional script to to your page or re-build Prevel locally on your computer.
 
 __Example of attaching:__
 
@@ -14,7 +16,19 @@ __Example of attaching:__
 
 Where __prevel-ext-core.js__ is file contains [this code](https://github.com/chernikovalexey/Prevel/blob/master/Extensions/Core.js).
 
-Benefits of using more 4.3 Kb (uncompressed) are below...
+__How to re-build Prevel:__
+
+Firstable, you need Node.js. Just follow the [Builder Readme](https://github.com/chernikovalexey/Prevel/blob/master/Builder/README.md).
+
+So:
+
+```
+node Build.js 1.2.9 * core
+```
+
+Will contain all [Source files](https://github.com/chernikovalexey/Prevel/blob/master/Sources) and [Extensions/Core.js](https://github.com/chernikovalexey/Prevel/blob/master/Extensions/Core.js).
+
+---
 
 ###pl.map(array, function)
 
@@ -191,7 +205,7 @@ __Example:__
 
 ```javascript
 alert(pl.stringify({
-  name: 'Ernest',
-  given: 'Hemingway'
-})); // => '{"name":"Ernest","given":"Hemingway"}'
+  given: 'Ernest',
+  family: 'Hemingway'
+})); // => '{"given":"Ernest","family":"Hemingway"}'
 ```

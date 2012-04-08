@@ -1,7 +1,9 @@
 #Prevel Dom Extension
 
-This will be only useful if you use __[Prevel Dom Extension](https://github.com/chernikovalexey/Prevel/blob/master/Extensions/Dom.js)__
+This documentation will be only useful if you used __[Prevel Dom Extension](https://github.com/chernikovalexey/Prevel/blob/master/Extensions/Dom.js)__
 which is available as an addition to Prevel.
+
+To use it, you can simply attach it as the additional script to to your page or re-build Prevel locally on your computer.
 
 __Example of attaching:__
 
@@ -13,6 +15,18 @@ __Example of attaching:__
 ```
 
 Where __prevel-ext-dom.js__ is the file contains [this code](https://github.com/chernikovalexey/Prevel/blob/master/Extensions/Dom.js).
+
+__How to re-build Prevel:__
+
+Firstable, you need Node.js. Just follow the [Builder Readme](https://github.com/chernikovalexey/Prevel/blob/master/Builder/README.md).
+
+So:
+
+```
+node Build.js 1.2.9 * dom
+```
+
+Will contain all [Source files](https://github.com/chernikovalexey/Prevel/blob/master/Sources) and [Extensions/Dom.js](https://github.com/chernikovalexey/Prevel/blob/master/Extensions/Dom.js).
 
 ---
 
@@ -126,4 +140,59 @@ pl('<div>').appendTo('body');
 alert( pl('div').attr('class') ); // => ''
 pl('div').toggleClass('js-added');
 alert( pl('div').attr('class') ); // => js-added
+```
+
+---
+
+###pl().parents(selector)
+
+If `selected` is defined, returns all parents which fit to the `selector`. If undefined, returns all parent elements.
+
+Exempli gratia, we have the following HTML:
+
+```html
+<html>
+ <head></head>
+ <body>
+  <div class="test1">
+   <div class="test2">
+    <div id="final-test"></div>
+   </div>
+  </div>
+ </body>
+</html>
+```
+
+```javascript
+pl('#final-test').parents('.test1').get(); // => <div class="test1">...</div>
+pl('#final-test').parents().get(); 
+/* Outputs:
+ * [<div class="test2">...</div>, <div class="test1">...</div>, 
+ *   <body>...</body>, <html>...</html>]
+**/
+```
+
+---
+
+###pl().find(selector)
+
+Searches for elements, which fit to the `selector`, through already selected elements.
+
+HTML:
+
+```html
+<html>
+ <head></head>
+ <body>
+  <div class="test1">
+   <div class="test2">
+    <div id="final-test"></div>
+   </div>
+  </div>
+ </body>
+</html>
+```
+
+```javascript
+pl('.test1').find('#final-test').get(); // => <div id="final-test"></div>
 ```

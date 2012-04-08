@@ -1,4 +1,4 @@
-/* Prevel Library v1.2.8
+/* Prevel Library v1.2.9
  * http://github.com/chernikovalexey/Prevel
  * 
  * Copyright 2011-2012, Alexey Chernikov
@@ -434,7 +434,7 @@
           if(Request.readyState === 1) {
             (params.load || ef)();
           } else if(Request.readyState === 4) {
-            if(Request.status > 199 && Request.status < 300) {
+            if((Request.status > 199 && Request.status < 300) || Request.status === 304) {
               (params.success || ef)(
                 params.dataType === 'json' ? // Parse JSON if necessary
                   pl.JSON(Request.responseText) : 
