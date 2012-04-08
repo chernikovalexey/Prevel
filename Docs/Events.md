@@ -43,6 +43,7 @@ var h = function(e) {
   console.log( e.pageX, e.pageY ); // Coordinates
   console.log( e.target ); // Element, on which click has just happened
 };
+pl('*').bind('click', h);
 ```
 
 ---

@@ -69,7 +69,7 @@
             pl.events.ready(o);
             break; 
           case 'obj':
-            _int = o[0] ? o : [o];
+            _int = o[params || 0] ? o : [o];
             break;
         }
 

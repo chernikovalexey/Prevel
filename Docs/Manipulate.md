@@ -11,6 +11,7 @@ There're a few variants of using `pl()`.
 * `pl(selector [, context, index])` - select all the selector (optional: from the context).
 * `pl(callback)` - call the callback-function on dom loaded.
 * `pl('<tagname>' [, newElementAttributes])` - create tagname element.
+* `pl(node [, index])` - prepares `node` for further working with Prevel API; here `node` is an ordinary HTML Node (e.g. `var node = document.getElementById('some-id');`).
 
   ```javascript
   pl('div', 'body', 0); // The first div from the body
@@ -21,6 +22,10 @@ There're a few variants of using `pl()`.
     width: 600,
     height: 200
   });
+
+  // Use HTML Node instead of the selector
+  var node = document.getElementById('some-id');
+  pl(node).hide();
   ```
 
 ---
