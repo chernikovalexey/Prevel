@@ -30,7 +30,7 @@
   
   pl.extend(pl.fn, {
     css: function(style, set) {
-      if(set) {
+      if(!pl.type(set, 'undef')) {
         style = pl.camelCase(style);
         
         if(pl.type(set, 'int') && !pl.curCSS.rmvPostFix[style]) {

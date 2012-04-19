@@ -1,4 +1,4 @@
-/* Prevel Library v1.2.9
+/* Prevel Library v1.2.10
  * http://github.com/chernikovalexey/Prevel
  * 
  * Copyright 2011-2012, Alexey Chernikov
@@ -363,7 +363,7 @@
   
   pl.extend(pl.fn, {
     css: function(style, set) {
-      if(set) {
+      if(!pl.type(set, 'undef')) {
         style = pl.camelCase(style);
         
         if(pl.type(set, 'int') && !pl.curCSS.rmvPostFix[style]) {
@@ -479,7 +479,7 @@
         headers(1);
         Request.send(params.data);
       } else {
-        Request.open('GET', params.url + '&' + params.data, params.async);
+        Request.open('GET', params.url + (!pl.empty(params.data) ? '&' + params.data : ''), params.async);
         headers();
         Request.send(n);
       }
