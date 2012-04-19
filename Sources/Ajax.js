@@ -89,7 +89,7 @@
         headers(1);
         Request.send(params.data);
       } else {
-        Request.open('GET', params.url + (!pl.empty(params.data) ? '&' + params.data : ''), params.async);
+        Request.open('GET', params.url + (!pl.empty(params.data) ? '?' + params.data : ''), params.async);
         headers();
         Request.send(n);
       }
