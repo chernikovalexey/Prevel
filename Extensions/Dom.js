@@ -94,7 +94,11 @@
     val: function(insert) {
       if(!pl.type(insert, 'undef')) {
         pl.each(this.elements, function() {
-          this.value = insert;
+          if(pl(this).tag('textarea')) {
+            this.value = insert;
+          } else {
+            this.setAttribute('value', insert);
+          }
         });
         return this;
       } else {
