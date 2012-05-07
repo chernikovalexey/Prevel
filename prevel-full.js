@@ -397,6 +397,10 @@
   pl.extend({
     // Convert object to a 'param-string'
     toParams: function(o) {
+      if(pl.type(o, 'str')) {
+        return o;
+      }
+
       var pieces = [];
       for(var key in o) {
         pieces.push(
@@ -476,7 +480,11 @@
         headers(1);
         Request.send(params.data);
       } else {
-        Request.open('GET', params.url + (!pl.empty(params.data) ? '?' + params.data : ''), params.async);
+        Request.open(
+          'GET', 
+          params.url + (!pl.empty(params.data) ? (params.url.match(/\?/) ? '&' : '?') + params.data : ''),
+          params.async
+        );
         headers();
         Request.send(n);
       }
