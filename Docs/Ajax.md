@@ -60,8 +60,10 @@ __Examples of usage:__
     success: function(json) {
       alert('Ajax request was completely successfull!');
     },
-    error: function(errorNum, errorText) {
-      alert('Error #' + errorNum + ': ' + errorText);
+    
+    // If dataType equals "json", response text of the error will be parsed as JSON
+    error: function(errorNum, json_error) {
+      alert('Error #' + errorNum + ': ' + json_error);
     }
   });
   
@@ -73,6 +75,10 @@ __Examples of usage:__
     
     success: function(text) {
       alert('Server\'s answer: ' + text);
+    },
+    
+    error: function(errorNum, errorText) {
+      alert('Error #' + errorNum + ': ' + errorText);
     }
   });
   ```
