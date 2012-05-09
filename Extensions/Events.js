@@ -18,13 +18,14 @@
       }
 
       event.eventName = evt;
-      var element = this.elements[0];
 
-      if (document.createEvent) {
-        element.dispatchEvent(event);
-      } else {
-        element.fireEvent(event.eventType, event);
-      }
+      pl.each(this.elements, function(k, v) {
+        if(document.createEvent) {
+          v.dispatchEvent(event);
+        } else {
+          v.fireEvent(event.eventType, event);
+        } 
+      });
     }
   });
   
