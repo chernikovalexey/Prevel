@@ -1,4 +1,4 @@
-/* Prevel Library v1.2.12
+/* Prevel Library v1.2.13
  * http://github.com/chernikovalexey/Prevel
  * 
  * Copyright 2011-2012, Alexey Chernikov
@@ -438,19 +438,22 @@
           if(Request.readyState === 1) {
             (params.load || ef)();
           } else if(Request.readyState === 4) {
-            Request.responseText = params.dataType === 'json' ? pl.JSON(Request.responseText) : Request.responseText;
-            
+            var re = Request.responseText;
+            if(params.dataType === 'json') {
+              re = pl.JSON(re);
+            }
+
             if((Request.status > 199 && Request.status < 300) || Request.status === 304) {
-              (params.success || ef)(Request.responseText, Request.status);
+              (params.success || ef)(re, Request.status);
             } else {
-              (params.error || ef)(Request.status, Request.responseText);
+              (params.error || ef)(Request.status, re);
             }
           }
           
           params.always = params.always || ef;
           
           try {
-            params.always(Request.readyState, Request.status, Request.responseText);
+            params.always(Request.readyState, Request.status, re);
           } catch(e) {
             params.always(Request.readyState);
           }
