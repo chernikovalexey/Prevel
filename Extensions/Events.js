@@ -9,7 +9,7 @@
   pl.extend(pl.fn, {
     trigger: function(evt) {
       var event;
-      if (document.createEvent) {
+      if(document.createEvent) {
         event = document.createEvent('HTMLEvents');
         event.initEvent(evt, true, true);
       } else {
@@ -24,8 +24,10 @@
           v.dispatchEvent(event);
         } else {
           v.fireEvent(event.eventType, event);
-        } 
+        }
       });
+
+      return this;
     }
   });
   
