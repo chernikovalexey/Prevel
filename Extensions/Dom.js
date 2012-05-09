@@ -3,18 +3,7 @@
 **/
 
 (function(win, doc, undefined) {
-  
-  /* NOTE:
-   * this.elements (in pl() instance) always exists, so checking if this.elements equals true
-   * is senseless, it will be always true. Much better will be checking if it's empty or 
-   * trying to compare the first element with false values (false, null, undefined).
-   * 
-   * Examples:
-   * this.elements[0] || ...
-   * pl.empty(this.elements)
-   * this.elements[0] !== undefined
-  **/
-  
+    
   pl.extend({
     selectedBy: function(elem, selector) {
       var elems = pl(selector).get();
@@ -94,7 +83,7 @@
     val: function(insert) {
       if(!pl.type(insert, 'undef')) {
         pl.each(this.elements, function() {
-          if(pl(this).tag('textarea')) {
+          if(pl(this).tag('textarea') || pl.empty(insert)) {
             this.value = insert;
           } else {
             this.setAttribute('value', insert);

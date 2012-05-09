@@ -53,7 +53,7 @@
         }); 
       } else {
         if(pl.type(attr, 'str')) {
-          return this.elements[0][attr];
+          return this.elements[0][attr] || this.elements[0].getAttribute(attr);
         } else {
           for(var key in attr) {
             pl.fn.attr.call(this, key, attr[key]);
