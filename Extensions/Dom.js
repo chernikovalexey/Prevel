@@ -70,6 +70,18 @@
       });
       return this;
     },
+
+    rev: function() {
+      var nodes = [];
+      var len = this.elements.length;
+
+      for(var key = len - 1; key >= 0; --key) {
+        nodes.push(this.elements[key]);
+      }
+
+      this.elements = nodes;
+      return this;
+    },
     
     empty: function() {
       return pl(this.elements).html('');

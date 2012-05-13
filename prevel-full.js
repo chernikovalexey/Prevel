@@ -1,4 +1,4 @@
-/* Prevel Library v1.2.15
+/* Prevel Library v1.2.16
  * http://github.com/chernikovalexey/Prevel
  * 
  * Copyright 2011-2012, Alexey Chernikov
