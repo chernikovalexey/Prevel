@@ -1,4 +1,4 @@
-/* Prevel Library v1.2.16
+/* Prevel Library v1.2.17
  * http://github.com/chernikovalexey/Prevel
  * 
  * Copyright 2011-2012, Alexey Chernikov
@@ -440,7 +440,9 @@
           } else if(Request.readyState === 4) {
             var re = Request.responseText;
             if(params.dataType === 'json') {
-              re = pl.JSON(re);
+              try {
+                re = pl.JSON(re);
+              } catch(e) {}
             }
 
             if((Request.status > 199 && Request.status < 300) || Request.status === 304) {
@@ -979,7 +981,7 @@
           idx  = selector.slice(1);
           sets = doc[ge + 'ById'](idx);
 
-          if(pl.browser('ie') && sets.id !== idx) {
+          if(pl.browser('ie') && sets && sets.id !== idx) {
             sets = doc.all[idx];
           }
 

@@ -153,7 +153,7 @@
           idx  = selector.slice(1);
           sets = doc[ge + 'ById'](idx);
 
-          if(pl.browser('ie') && sets.id !== idx) {
+          if(pl.browser('ie') && sets && sets.id !== idx) {
             sets = doc.all[idx];
           }
 
