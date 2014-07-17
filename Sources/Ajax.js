@@ -55,7 +55,7 @@
               } catch(e) {}
             }
 
-            if((Request.status > 199 && Request.status < 300) || Request.status === 304) {
+            if((Request.status >= 200 && Request.status <= 299) || Request.status === 304) {
               (params.success || ef)(re, Request.status);
             } else {
               (params.error || ef)(Request.status, re);
