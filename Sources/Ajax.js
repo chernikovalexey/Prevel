@@ -55,7 +55,12 @@
               } catch(e) {}
             }
 
-            if((Request.status > 199 && Request.status < 300) || Request.status === 304) {
+            // Note: File protocol always yields status code 0, assume 200
+            // reference:
+            // * https://bugs.jquery.com/ticket/8605
+            // * https://bugs.jquery.com/ticket/14207
+            // * https://github.com/jquery/jquery/blob/262acc6f1e0f71a3a8b786e3c421b2e645799ea0/src/ajax/xhr.js
+            if((Request.status > 199 && Request.status < 300) || Request.status === 304 || Request.status === 0) {
               (params.success || ef)(re, Request.status);
             } else {
               (params.error || ef)(Request.status, re);
