@@ -1,4 +1,4 @@
-###Prevel Library
+### Prevel Library
 
 It's a lightweight (approximately 5 Kb) JavaScript library with strong functionality. 
 All the methods which can be useful in all kinds of development are attending in 
